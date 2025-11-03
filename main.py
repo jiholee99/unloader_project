@@ -25,6 +25,7 @@ def main():
 
     # 1️⃣ Load an image
     image_path = r"assets\test_images\full.jpeg"  # change to your image path
+    # image_path = r"assets/test_images/full.jpeg"  # For Linux
     image = cv2.imread(image_path)
 
     if image is None:
