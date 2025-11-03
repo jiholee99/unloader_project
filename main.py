@@ -1,7 +1,7 @@
 import cv2
 from core.process.pre_process.image_pre_processor import ImagePreprocessor  # adjust import if needed
 from exceptions.exception import AppException
-from core.analysis.distance_validator import DistanceValidator
+from core.analysis.fullness_validator import FullnessValidator
 from utils.logger import get_logger
 from core.process.pre_process.image_pre_process_service import ImagePreprocessService
 from core.process.post_process.image_post_processor_service import ImagePostProcessorService
@@ -58,11 +58,11 @@ def main():
         show_scaled(f"Overlay: Filled Contours", blended_image)
 
         # 5️⃣ Validate distance using DistanceValidator
-        validator = DistanceValidator()
+        validator = FullnessValidator()
         roi_coords = [0, 0, w, h]  # since we cropped, ROI is the whole cropped image
         cutoff_point = 0.5  # example cutoff
-        is_valid_distance = validator.is_valid(post_processed_img, roi_coords, threshold_value, cutoff_point)
-        print(f"✅ Distance Valid: {is_valid_distance}")
+        is_valid_fullness = validator.is_valid(post_processed_img, roi_coords, threshold_value, cutoff_point)
+        print(f"✅ Fullness Valid: {is_valid_fullness}")
 
         
 

@@ -3,7 +3,7 @@ import numpy as np
 from exceptions.exception import DistanceValidationException
 from utils.logger import get_logger
 
-class DistanceValidator:
+class FullnessValidator:
     """
     Validator used to see if the roller is in valid distance range.
     """

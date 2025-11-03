@@ -17,7 +17,7 @@ class LogDisplayWidget(QWidget):
 
 
         # === Scrollable Text View ===
-        sample_text = "sdasd\nsadasd\nsadasdasd\nsadsadsd" # Sample long text for demonstration
+        sample_text = QWidget()
         self.scroll_view = DefaultScrollView(sample_text)
         layout.addWidget(self.scroll_view)
 

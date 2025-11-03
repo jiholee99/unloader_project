@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout
 from PySide6.QtCore import Qt
-from ..default_widgets.default_title_container_widget import DefaultContainerTitleWidget
-from ..config.theme import Theme
+from ui.view.default_widgets.default_title_container_widget import DefaultContainerTitleWidget
+from ui.view.config.theme import Theme
 from .log_display_widget import LogDisplayWidget
 class LogViewerWidget(QWidget):
     def __init__(self, parent=None):
