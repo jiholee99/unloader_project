@@ -1,0 +1,20 @@
+{
+    "appname": "Unloader Project",
+    "version": "1.0.0",
+    "judgements" : {
+        "cutoff_point" : 0.5
+    },
+    "log_options": {
+        "log_to_file": true,
+        "log_level": "DEBUG",
+        "log_file_path": "logs/app.log"
+    },
+    "preprocess_options": {
+        "threshold": 75,
+        "max_threshold": 255
+    },
+    "postprocess_options": {
+        "min_contour_area": 500,
+        "use_fill_holes": true
+    }
+}
