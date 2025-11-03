@@ -1,8 +1,10 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout
-from .side_panel.side_panel import SidePanel
-from .image_section.image_section import ImageSection
-from .config.theme import Theme
-from .log_viewer.log_viewer_widget import LogViewerWidget
+from ui.view.side_panel.side_panel import SidePanel
+from ui.view.image_section.image_section import ImageSection
+from ui.view.config.theme import Theme
+from ui.view.log_viewer.log_viewer_widget import LogViewerWidget
+from utils.logger import get_logger
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -22,7 +24,7 @@ class MainWindow(QMainWindow):
                 background-color: #005f99;
             }}
         """)
-        
+        get_logger().info("MainWindow initialized.")
         # Main background color
         self.setObjectName("MainWindow")
 

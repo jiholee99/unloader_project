@@ -1,7 +1,7 @@
 import cv2
 from PySide6.QtWidgets import QFileDialog
-from model.image_model import ImageModel
-from view.main_window import MainWindow
+from ui.model.image_model import ImageModel
+from ui.view.main_window import MainWindow
 
 class MainController:
     def __init__(self):

@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
 from PySide6.QtCore import Signal
-from ..config.theme import Theme
-from ..default_widgets.default_button import DefaultButton
+from ui.view.config.theme import Theme
+from ui.view.default_widgets.default_button import DefaultButton
 
 class SidePanel(QWidget):
     load_image_clicked = Signal()

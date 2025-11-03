@@ -19,3 +19,5 @@ source .venv/bin/activate     # On Linux/macOS
 pip install -r requirements.txt
 ```
 
+# Important Notes
+Right now test app with main.py.
