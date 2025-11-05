@@ -24,7 +24,7 @@ def main():
     preprocessor = ImagePreprocessor()
 
     # 1️⃣ Load an image
-    image_path = r"assets\test_images\full.jpeg"  # change to your image path
+    image_path = r"assets\test_images\far.jpeg"  # change to your image path
     # image_path = r"assets/test_images/full.jpeg"  # For Linux
     image = cv2.imread(image_path)
 
@@ -35,11 +35,9 @@ def main():
     # show_scaled("Original", image)
 
     try:
-        
-
         # Preprocess
         # Get ROI , apply threshold and returns mask
-        service = ImagePreprocessService()
+        service = ImagePreprocessService(options=AppConfigHandler.get_preprocess_options())
         preprocessor_config = AppConfigHandler.get_preprocess_options()
         x, y, w, h = get_roi_coordinates()
         roi_coords = [x, y, w, h]
@@ -48,14 +46,18 @@ def main():
         show_scaled(f"Processed Mask (>{threshold_value})", processed_mask)
 
         # post-process
-        post_processor = ImagePostProcessorService()
+        post_processor_config = AppConfigHandler.get_postprocess_options()
+        post_processor = ImagePostProcessorService(options=post_processor_config)
         post_processed_img = post_processor.post_process(processed_mask)
 
         show_scaled(f"Post Processed Mask", post_processed_img)
 
         from utils.visual_debugger import overlay_filled_contours
         blended_image = overlay_filled_contours(image=service.get_roi_image(), contours=post_processor.get_contours())
-        show_scaled(f"Overlay: Filled Contours", blended_image)
+        show_scaled(f"Contours using post processed image", blended_image)
+
+
+
 
         # 5️⃣ Validate distance using DistanceValidator
         validator = FullnessValidator()

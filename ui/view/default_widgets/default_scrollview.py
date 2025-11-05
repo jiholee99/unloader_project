@@ -18,6 +18,9 @@ class DefaultScrollView(QScrollArea):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.setFrameShape(QScrollArea.NoFrame)
 
+        self.child_widget = child_widget
+
+
         # Force a background on *viewport* to remove dotted transparency
         self.viewport().setStyleSheet(f"background-color: {Theme.background_color}; border: none;")
 

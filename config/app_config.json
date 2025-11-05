@@ -10,8 +10,10 @@
         "log_file_path": "logs/app.log"
     },
     "preprocess_options": {
-        "threshold": 75,
-        "max_threshold": 255
+        "threshold": 55,
+        "max_threshold": 255,
+        "use_remove_bright_line" : true,
+        "use_hsv_filter": false
     },
     "postprocess_options": {
         "min_contour_area": 500,

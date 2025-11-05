@@ -3,9 +3,10 @@ from exceptions.exception import ImageProcessingException
 
 class ImagePreprocessService:
     # Swap out the preprocessor for easier testing/mocking
-    def __init__(self, preProcessor = ImagePreprocessor()):
+    def __init__(self, preProcessor = ImagePreprocessor(), options: dict = {} ):
         self.preprocessor = preProcessor
         self._roi_image = None
+        self._options = options
 
     def process_image(self, image, roi_coords : list[int], threshold: int, max_threshold = 255):
         """
@@ -20,13 +21,23 @@ class ImagePreprocessService:
             mask: The binary mask after thresholding the cropped ROI.
         """
         try:
-            self._roi_image = self.preprocessor.crop_roi(image, *roi_coords)
-            gray = self.preprocessor.convert_to_grayscale(self._roi_image)
+            # Essential steps. Do not use options to disable these.
+            self._roi_image = self.preprocessor.crop_roi(image, *roi_coords,)
+            preprocessed_mask_img = self._roi_image
+            # Optional: Remove bright line if enabled
+            if self._options.get("use_remove_bright_line", False):
+                preprocessed_mask_img = self.preprocessor.preprocess_remove_bright_line(img=self._roi_image, orientation='horizontal')
+            else:
+                preprocessed_mask_img = self._roi_image
+            
+            gray = self.preprocessor.convert_to_grayscale(preprocessed_mask_img)
             mask = self.preprocessor.apply_threshold(gray, threshold, max_threshold)
             return mask
         except Exception as e:
             raise ImageProcessingException(f"Image processing service error",e)
         
-
+    def get_options(self):
+        return self._options
+    
     def get_roi_image(self):
         return self._roi_image
