@@ -21,6 +21,9 @@ class ImageModel:
 
     def load_processed_image(self, path: str):
         image = cv2.imread(path)
+        return self._process_image(image)
+
+    def _process_image(self, image: np.ndarray):
         service = ImagePreprocessService(options=AppConfigHandler.get_preprocess_options())
         preprocessor_config = AppConfigHandler.get_preprocess_options()
         x, y, w, h = get_roi_coordinates()
