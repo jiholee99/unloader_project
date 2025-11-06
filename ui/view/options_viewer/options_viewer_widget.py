@@ -18,7 +18,7 @@ class OptionsViewer(QWidget):
         options = Options()
         self.settings_scrollview = DefaultScrollView(child_widget=options)
 
-        self.button = DefaultButton("Click Me")
+        self.button = DefaultButton("Apply Options")
 
         # Child to pass in to DefaultViewerContainerWidget
         outer = QWidget()

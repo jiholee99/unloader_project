@@ -11,15 +11,13 @@ class ImageViewerWidget(QWidget):
 
         # Example inner content widget
         self.preprocssed_display = DefaultImageDisplay(title="Preprocessed Image")
-        self.postprocessed_display = DefaultImageDisplay(title="Postprocessed Image")
-        self.contour_display = DefaultImageDisplay(title="Contour Image")
+        self.original_display = DefaultImageDisplay(title="Original Image")
         self.image_display = QWidget()
         image_layout = QHBoxLayout(self.image_display)
         image_layout.setContentsMargins(5, 5, 5, 5)
         image_layout.setSpacing(10)
         image_layout.addWidget(self.preprocssed_display)
-        image_layout.addWidget(self.postprocessed_display)
-        image_layout.addWidget(self.contour_display)
+        image_layout.addWidget(self.original_display)
 
         
 

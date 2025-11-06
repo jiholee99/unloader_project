@@ -11,7 +11,5 @@ class Options(QWidget):
         layout = QVBoxLayout(self)
         button = DefaultButton("Load Image")
         layout.addWidget(button)
-        button2 = DefaultButton("Option 2")
-        layout.addWidget(button2)
 
         button.clicked.connect(self.button1_clicked.emit)
