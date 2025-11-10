@@ -1,8 +1,14 @@
 {
     "appname": "Unloader Project",
     "version": "1.0.0",
-    "judgements" : {
-        "cutoff_point" : 0.5
+    "roi": {
+        "x": 904,
+        "y": 1542,
+        "w": 2227,
+        "h": 2779
+    },
+    "judgement_options": {
+        "fullness_cutoff": 0.5
     },
     "log_options": {
         "log_to_file": true,
@@ -12,7 +18,7 @@
     "preprocess_options": {
         "threshold": 55,
         "max_threshold": 255,
-        "use_remove_bright_line" : true,
+        "use_remove_bright_line": true,
         "use_hsv_filter": false
     },
     "postprocess_options": {

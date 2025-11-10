@@ -7,7 +7,7 @@ class FullnessValidator:
     """
     Validator used to see if the roller is in valid distance range.
     """
-    def _calculate_fullness(self, preprocessed_image, roi : list[int], threshold: int) -> float:
+    def _calculate_fullness(self, preprocessed_image, threshold: int) -> float:
         """
         Calculate how full the roller is in the image.
         Args:
@@ -18,19 +18,17 @@ class FullnessValidator:
             float: A value representing how full the roller is.
         """
         try:
-            x, y, w, h = roi
-            roi_image = preprocessed_image[y:y+h, x:x+w]
-            total_pixels = roi_image.size
+            total_pixels = preprocessed_image.size
             if total_pixels == 0:
                 return 0.0
-            filled_pixels = cv2.countNonZero((roi_image < threshold).astype(np.uint8))
+            filled_pixels = cv2.countNonZero((preprocessed_image < threshold).astype(np.uint8))
             fullness = filled_pixels / total_pixels
-            get_logger().info(f"Calculated fullness: {fullness}")
+            get_logger().info(f"Calculated fullness: {fullness * 100:.4f}%")
             return fullness
         except Exception as e:
             raise DistanceValidationException(f"Error calculating fullness: {e}",e)
 
-    def is_valid(self, preprocessed_image, roi : list[int], threshold: int,cutoff_point: float) -> bool:
+    def is_valid(self, preprocessed_image, threshold: int, cutoff_point: float) -> bool:
         """
         Takes in a preprocessed image and determines if the roller is within valid distance range.
         Args:
@@ -42,7 +40,7 @@ class FullnessValidator:
             bool: True if the roller is within valid distance range, False otherwise.
         """
         try:
-            fullness = self._calculate_fullness(preprocessed_image, roi, threshold)
+            fullness = self._calculate_fullness(preprocessed_image,threshold)
             return fullness >= cutoff_point
         except Exception as e:
             raise DistanceValidationException(original_exception=e)

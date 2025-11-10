@@ -1,5 +1,6 @@
 from core.process.pre_process.image_pre_processor import ImagePreprocessor
 from exceptions.exception import ImageProcessingException
+from utils.logger import get_logger
 
 class ImagePreprocessService:
     # Swap out the preprocessor for easier testing/mocking
@@ -7,8 +8,9 @@ class ImagePreprocessService:
         self.preprocessor = preProcessor
         self._roi_image = None
         self._options = options
+        self.logger = get_logger(__name__)
 
-    def process_image(self, image, roi_coords : list[int], threshold: int, max_threshold = 255):
+    def process_image(self, image, roi_coords : list[int], threshold: int = 0, max_threshold = 255):
         """
         Process the image through various stages.\n
         Right now includes grayscale conversion, ROI cropping, and thresholding.
@@ -31,7 +33,7 @@ class ImagePreprocessService:
                 preprocessed_mask_img = self._roi_image
             
             gray = self.preprocessor.convert_to_grayscale(preprocessed_mask_img)
-            mask = self.preprocessor.apply_threshold(gray, threshold, max_threshold)
+            mask = self.preprocessor.apply_threshold(gray, self._options.get("threshold", threshold), max_threshold)
             return mask
         except Exception as e:
             raise ImageProcessingException(f"Image processing service error",e)

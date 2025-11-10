@@ -27,6 +27,23 @@ class AppConfigHandler:
         return config_data.get("logger_options", {})
 
     @staticmethod
+    def get_roi_settings() -> dict:
+        """Retrieve ROI settings from config.
+        If not found, returns empty dict.
+        Data structure:
+        {
+            "roller_roi": {
+                "x": int,
+                "y": int,
+                "w": int,
+                "h": int
+            }
+        }
+        """
+        config_data = AppConfigHandler._load_config()
+        return config_data.get("roi", {})
+
+    @staticmethod
     def get_preprocess_options() -> dict:
         """Retrieve preprocessing options from config.
         If not found, returns empty dict.
@@ -51,3 +68,15 @@ class AppConfigHandler:
         """
         config_data = AppConfigHandler._load_config()
         return config_data.get("postprocess_options", {})
+    
+    @staticmethod
+    def get_judgement_options() -> dict:
+        """Retrieve judgment options from config.
+        If not found, returns empty dict.
+        Data structure:
+        {
+            "fullness_cutoff": float
+        }
+        """
+        config_data = AppConfigHandler._load_config()
+        return config_data.get("judgement_options", {})

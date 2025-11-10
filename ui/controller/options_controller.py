@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QFileDialog
 from ui.model.image_model import ImageModel
 from ui.model.options_model import OptionsModel
 from ui.view.options_viewer.options_viewer_widget import OptionsViewer
+
 class OptionsController(QObject):
 
     image_requested = Signal(str)  # signal carries path to image

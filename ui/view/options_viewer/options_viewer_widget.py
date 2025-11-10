@@ -38,7 +38,7 @@ class OptionsViewer(QWidget):
         self.layout.addWidget(container)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.setMinimumHeight(400)
-        self.setMinimumWidth(350) 
+        self.setMinimumWidth(250) 
 
 
 

@@ -1,6 +1,6 @@
 import sys
 import cv2
-import yaml
+import json
 from PySide6.QtWidgets import (
     QApplication, QLabel, QWidget, QPushButton, QVBoxLayout,
     QFileDialog, QHBoxLayout, QMessageBox
@@ -109,9 +109,9 @@ class ImageLabel(QLabel):
 
 
 class ROIDebugger(QWidget):
-    def __init__(self, save_path="config/roi_settings.yaml"):
+    def __init__(self, save_path="config/app_config.json"):
         super().__init__()
-        self.setWindowTitle("ROI Debug Tool with Save")
+        self.setWindowTitle("ROI Debug Tool with Save (JSON)")
         self.resize(1000, 800)
 
         self.save_path = save_path
@@ -119,7 +119,7 @@ class ROIDebugger(QWidget):
         self.load_button = QPushButton("Load Image")
         self.load_button.clicked.connect(self.load_image)
 
-        self.save_button = QPushButton("Save ROI to YAML")
+        self.save_button = QPushButton("Save ROI to JSON")
         self.save_button.clicked.connect(self.save_roi)
 
         self.roi_preview = QLabel("ROI Preview")
@@ -164,15 +164,28 @@ class ROIDebugger(QWidget):
             self.roi_preview.setText("Invalid ROI")
 
     def save_roi(self):
-        """Save the last ROI coordinates to YAML file."""
+        """Save or update ROI coordinates in appconfig.json."""
         if not self.last_coords:
             QMessageBox.information(self, "No ROI", "No ROI selected to save.")
             return
-        data = {"roller_roi": self.last_coords}
+
+        data = {}
+        try:
+            # Load existing JSON if it exists
+            with open(self.save_path, "r") as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            pass  # If file doesn't exist, start fresh
+        except json.JSONDecodeError:
+            QMessageBox.warning(self, "Error", "⚠️ Invalid JSON, overwriting file.")
+
+        # Update or add ROI key
+        data["roi"] = self.last_coords
+
         try:
             with open(self.save_path, "w") as f:
-                yaml.dump(data, f)
-            QMessageBox.information(self, "Saved", f"ROI saved to:\n{self.save_path}")
+                json.dump(data, f, indent=4)
+            QMessageBox.information(self, "Saved", f"ROI updated in:\n{self.save_path}")
             print(f"✅ ROI saved to {self.save_path}: {data}")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to save ROI:\n{e}")
@@ -180,7 +193,6 @@ class ROIDebugger(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    # 👇 change this path to wherever you want your ROI YAML stored
-    win = ROIDebugger(save_path="config/roi_settings.yaml")
+    win = ROIDebugger(save_path="config/app_config.json")
     win.show()
     sys.exit(app.exec())

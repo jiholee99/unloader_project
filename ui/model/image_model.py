@@ -3,7 +3,6 @@ import numpy as np
 
 from core.process.pre_process.image_pre_process_service import ImagePreprocessService
 from core.process.post_process.image_post_processor_service import ImagePostProcessorService
-from main import get_roi_coordinates
 from utils.app_config_handler import AppConfigHandler
 
 class ImageModel:
@@ -26,7 +25,8 @@ class ImageModel:
     def _process_image(self, image: np.ndarray):
         service = ImagePreprocessService(options=AppConfigHandler.get_preprocess_options())
         preprocessor_config = AppConfigHandler.get_preprocess_options()
-        x, y, w, h = get_roi_coordinates()
+        roi_config = AppConfigHandler.get_roi_settings()
+        x, y, w, h = roi_config.get("x", 0), roi_config.get("y", 0), roi_config.get("w", 100), roi_config.get("h", 100)
         roi_coords = [x, y, w, h]
         threshold_value = preprocessor_config.get("threshold", 10)
         processed_mask = service.process_image(image=image, roi_coords=roi_coords, threshold=threshold_value)

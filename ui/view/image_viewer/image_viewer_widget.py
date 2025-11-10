@@ -10,8 +10,8 @@ class ImageViewerWidget(QWidget):
         self.model = model if model is not None else ImageModel()
 
         # Example inner content widget
-        self.preprocssed_display = DefaultImageDisplay(title="Preprocessed Image")
-        self.original_display = DefaultImageDisplay(title="Original Image")
+        self.preprocssed_display = DefaultImageDisplay(title="Live Edit Image")
+        self.original_display = DefaultImageDisplay(title="Result Image")
         self.image_display = QWidget()
         image_layout = QHBoxLayout(self.image_display)
         image_layout.setContentsMargins(5, 5, 5, 5)
