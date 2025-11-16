@@ -32,3 +32,13 @@ class AppConfigException(AppException):
     """Exception raised for application configuration errors."""
     def __init__(self, message="Application configuration error occurred.", original_exception=None):
         super().__init__(message, original_exception)
+
+class ImageGrabException(AppException):
+    """Exception raised during image grabbing errors."""
+    def __init__(self, message="Image grabbing error occurred.", original_exception=None):
+        super().__init__(message, original_exception)
+
+class InspectionException(AppException):
+    """Exception raised during inspection process errors."""
+    def __init__(self, message="Inspection process error occurred.", original_exception=None):
+        super().__init__(message, original_exception)

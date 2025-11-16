@@ -1,4 +1,4 @@
-from core.process.pre_process.image_pre_processor import ImagePreprocessor
+from core.inspection.process.pre_process.image_pre_processor import ImagePreprocessor
 from exceptions.exception import ImageProcessingException
 from utils.logger import get_logger
 

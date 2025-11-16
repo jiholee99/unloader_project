@@ -1,5 +1,5 @@
-from core.process.post_process.image_post_processor import ImagePostProcessor
-from core.process.post_process.contour_processor import ContourProcessor
+from core.inspection.process.post_process.image_post_processor import ImagePostProcessor
+from core.inspection.process.post_process.contour_processor import ContourProcessor
 from exceptions.exception import ImagePostProcessingException
 from utils.logger import get_logger
 
@@ -24,7 +24,7 @@ class ImagePostProcessorService:
             self._contours = contours
             return mask
         except Exception as e:
-            raise ImagePostProcessingException(f"Post-processing error", e)
+            raise ImagePostProcessingException(f"Post-processing Service error", e)
 
     def get_contours(self):
         return self._contours

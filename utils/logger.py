@@ -10,16 +10,8 @@ _loggers = {}  # cache to avoid re-creating handlers
 
 def get_logger(name="app", log_subdir=None, level=logging.DEBUG):
     """
-    Get or create a logger that writes to a dated log file inside its own folder.
-
-    Args:
-        name (str): Internal logger name (unique key).
-        log_subdir (str, optional): Subdirectory name under logs/, e.g. 'image_processor'.
-                                   If None, defaults to 'app'.
-        level (int): Logging level (default: DEBUG).
-
-    Returns:
-        logging.Logger: Configured logger instance.
+    Get or create a logger. Subdirectory affects only file path.
+    Logger 'name' affects only how messages appear in logs.
     """
     global _loggers
 
@@ -30,11 +22,17 @@ def get_logger(name="app", log_subdir=None, level=logging.DEBUG):
     logger = logging.getLogger(name)
     logger.setLevel(level)
 
-    # --- log directory and file path ---
-    subdir = log_subdir or name
-    dir_path = os.path.join(LOG_DIR, subdir)
+    # --- log directory ---
+    # If no subdir provided -> logs/ directly OR logs/app/ (choose your style)
+    if log_subdir:
+        dir_path = os.path.join(LOG_DIR, log_subdir)
+    else:
+        dir_path = LOG_DIR  # store logs directly under logs/
+        # OR: dir_path = os.path.join(LOG_DIR, "app")
+    
     os.makedirs(dir_path, exist_ok=True)
 
+    # --- log file ---
     date_str = datetime.now().strftime("%Y-%m-%d")
     log_path = os.path.join(dir_path, f"{date_str}.log")
 
