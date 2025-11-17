@@ -1,8 +1,6 @@
 import numpy as np
 from exceptions.exception import ImageGrabException
-
-from core.image_grab.file_grabber import FileGrabber
-from core.image_grab.camera_grabber import CameraGrabber
+from adapters.image_grab import CameraGrabber, FileGrabber
 
 class ImageGrabService:
     @staticmethod
@@ -19,6 +17,13 @@ class ImageGrabService:
         except Exception as e:
             raise ImageGrabException("Failed to grab image from file.", e)
     
+    @staticmethod
+    def save_image_to_file(image: np.ndarray, file_path: str) -> None:
+        try:
+            CameraGrabber.save_grabbed_image(image, file_path)
+        except Exception as e:
+            raise ImageGrabException("Failed to save image to file.", e)
+
     @staticmethod
     def grab_multiple_images_from_files(image_paths: list) -> list:
         try:

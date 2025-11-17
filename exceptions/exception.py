@@ -13,9 +13,14 @@ class ImageLoadException(AppException):
     def __init__(self, message="Image loading error occurred.", original_exception=None):
         super().__init__(message, original_exception)
 
-class ImageProcessingException(AppException):
+class ImagePreProcessServiceException(AppException):
     """Exception raised during image processing errors."""
     def __init__(self, message="Image preprocessing error occurred.", original_exception=None):
+        super().__init__(message, original_exception)
+
+class ImagePreProcessorException(AppException):
+    """Exception raised during image preprocessing errors."""
+    def __init__(self, message="Image Pre_Processor error occurred.", original_exception=None):
         super().__init__(message, original_exception)
 
 class ImagePostProcessingException(AppException):
@@ -41,4 +46,9 @@ class ImageGrabException(AppException):
 class InspectionException(AppException):
     """Exception raised during inspection process errors."""
     def __init__(self, message="Inspection process error occurred.", original_exception=None):
+        super().__init__(message, original_exception)
+
+class SequenceException(AppException):
+    """Exception raised during sequence execution errors."""
+    def __init__(self, message="Sequence execution error occurred.", original_exception=None):
         super().__init__(message, original_exception)

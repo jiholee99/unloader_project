@@ -18,3 +18,7 @@ class CameraGrabber():
             raise ImageGrabException("Failed to grab image from camera.")
         
         return frame
+    
+    @staticmethod
+    def save_grabbed_image(image: np.ndarray, save_path: str):
+        cv2.imwrite(save_path, image)

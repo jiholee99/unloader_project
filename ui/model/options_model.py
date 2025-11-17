@@ -1,5 +1,5 @@
 from PySide6.QtCore import QObject, Signal
-from utils.app_config_handler import AppConfigHandler
+from adapters.config.app_config_handler import AppConfigHandler
 class OptionsModel(QObject):
     options_changed = Signal(dict)  # emitted whenever options update
 

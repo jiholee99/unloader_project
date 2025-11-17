@@ -1,5 +1,5 @@
 from core.inspection.process.pre_process.image_pre_processor import ImagePreprocessor
-from exceptions.exception import ImageProcessingException
+from exceptions.exception import ImagePreProcessServiceException
 from utils.logger import get_logger
 
 class ImagePreprocessService:
@@ -36,7 +36,7 @@ class ImagePreprocessService:
             mask = self.preprocessor.apply_threshold(gray, self._options.get("threshold", threshold), max_threshold)
             return mask
         except Exception as e:
-            raise ImageProcessingException(f"Image processing service error",e)
+            raise ImagePreProcessServiceException(f"Image processing service error",e)
         
     def get_options(self):
         return self._options

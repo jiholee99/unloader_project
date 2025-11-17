@@ -1,11 +1,12 @@
 {
     "appname": "Unloader Project",
     "version": "1.0.0",
+    "loop_delay_seconds": 5,
     "roi": {
-        "x": 904,
-        "y": 1542,
-        "w": 2227,
-        "h": 2779
+        "x": 343,
+        "y": 116,
+        "w": 297,
+        "h": 183
     },
     "judgement_options": {
         "fullness_cutoff": 0.5

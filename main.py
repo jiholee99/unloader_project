@@ -1,13 +1,15 @@
 from exceptions.exception import AppException
 from utils.logger import get_logger
 from utils.visual_debugger import overlay_filled_contours, show_scaled
-from core.runner.runner import Runner
+from app.runner import Runner
 
 def main():
-    logger = get_logger()
+    logger = get_logger("Main")
     try:
+        logger.info("Application started.")
         runner = Runner()
         runner.run()
+        logger.info("Application finished successfully.")
     except AppException as e:
        logger.error(f"{e}")
     except Exception as e:

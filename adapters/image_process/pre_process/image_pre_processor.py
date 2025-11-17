@@ -1,33 +1,34 @@
 import cv2
-from exceptions.exception import ImageProcessingException
+from exceptions.exception import ImagePreProcessorException
 import numpy as np
 class ImagePreprocessor:
-    def convert_to_grayscale(self, image):
+    @staticmethod
+    def convert_to_grayscale(image):
         """Convert the input image to grayscale."""
         try:
             return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         except Exception as e:
-            raise ImageProcessingException(f"Error converting image to grayscale",e)
-        
-    def crop_roi(self, image, x, y, w, h):
+            raise ImagePreProcessorException(f"Error converting image to grayscale",e)
+    @staticmethod    
+    def crop_roi(image, x, y, w, h):
         """Crop the region of interest from the image. Returns the cropped image."""
         try:
             roi = image[y:y+h, x:x+w]
             if roi.size == 0:
-                raise ImageProcessingException("Cropped ROI is empty or out of bounds.")
+                raise ImagePreProcessorException("Cropped ROI is empty or out of bounds.")
             return roi
         except Exception as e:
-            raise ImageProcessingException(f"Error cropping ROI",e)
-
-    def apply_threshold(self, gray_image, min_threshold, max_threshold = 255):
+            raise ImagePreProcessorException(f"Error cropping ROI",e)
+    @staticmethod
+    def apply_threshold(gray_image, min_threshold, max_threshold = 255):
         """Apply binary thresholding to the grayscale image."""
         try:
             _, mask = cv2.threshold(gray_image, min_threshold, max_threshold, cv2.THRESH_BINARY)
             return mask
         except Exception as e:
-            raise ImageProcessingException(f"Error applying threshold",e)
-
-    def preprocess_remove_bright_line(self, img, orientation='vertical'):
+            raise ImagePreProcessorException(f"Error applying threshold",e)
+    @staticmethod
+    def preprocess_remove_bright_line(img, orientation='vertical'):
         # Convert to grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 

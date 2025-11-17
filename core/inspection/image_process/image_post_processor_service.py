@@ -1,5 +1,4 @@
-from core.inspection.process.post_process.image_post_processor import ImagePostProcessor
-from core.inspection.process.post_process.contour_processor import ContourProcessor
+from adapters.image_process import ImagePostProcessor, ContourProcessor
 from exceptions.exception import ImagePostProcessingException
 from utils.logger import get_logger
 
@@ -10,15 +9,15 @@ class ImagePostProcessorService:
     Uses ImagePostProcessor to perform operations.
     """
 
-    def __init__(self, post_processor=ImagePostProcessor(), options: dict = {}):
+    def __init__(self, post_processor : ImagePostProcessor, config: dict = {}):
         self.post_processor = post_processor
         self._contours = None
-        self._options = options
+        self._config = config
         self.logger = get_logger(__name__)
 
     def post_process(self, mask):
         try:
-            if self._options.get("use_fill_holes", False):
+            if self._config.get("use_fill_holes", False):
                 mask = self.post_processor.fill_holes_in_mask(mask)
             contours = self.post_processor.detect_contours(mask)
             self._contours = contours

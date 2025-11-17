@@ -1,45 +1,25 @@
 import cv2
+#Exceptions
 from exceptions.exception import InspectionException
-from core.image_grab.image_grab_service import ImageGrabService
-from core.inspection.process.pre_process.image_pre_process_service import ImagePreprocessService
-from core.inspection.process.post_process.image_post_processor_service import ImagePostProcessorService
-from utils.visual_debugger import show_scaled
+# Core Services
+from core.inspection.image_process import ImagePreprocessService, ImagePostProcessorService
+
 import numpy as np
-from utils.app_config_handler import AppConfigHandler
+
+# Utils
 from utils.logger import get_logger
+from utils.visual_debugger import show_scaled
 
 class InspectionService:
-    def __init__(self):
-        self.pre_processed_image = None
-        self.post_processed_image = None
-        self.pre_process_options = {}
-        self.post_process_options = {}
-        self.judgement_options = {}
-        self.roi_coords = []
+    def __init__(self, pre_processor : ImagePreprocessService, post_processor : ImagePostProcessorService):
         self.logger = get_logger()
 
-    def _load_config(self):
-        self.pre_process_options = AppConfigHandler.get_preprocess_options()
-        self.post_process_options = AppConfigHandler.get_postprocess_options()
-        self.judgement_options = AppConfigHandler.get_judgement_options()
-        roi = AppConfigHandler.get_roi_settings()
-        self.roi_coords = [roi["x"], roi["y"], roi["w"], roi["h"]]
+        self._pre_processor = pre_processor
+        self._post_processor = post_processor
+        self._pre_mask_image = None
+        self._post_mask_image = None
+        self._contours = []
 
-    def _pre_process_image(self, image: np.ndarray) -> np.ndarray:
-        self.logger.info("Starting image preprocessing...")
-        pre_process_service = ImagePreprocessService(options=self.pre_process_options)
-        processed_mask = pre_process_service.process_image(image=image, roi_coords=self.roi_coords)
-        show_scaled(f"Processed Mask", processed_mask)
-        self.logger.info("Image preprocessing completed.")
-        return processed_mask
-
-    def _post_process_image(self, pre_processed_image: np.ndarray) -> np.ndarray:
-        self.logger.info("Starting image postprocessing...")
-        post_process_service = ImagePostProcessorService(options=self.post_process_options)
-        processed_image = post_process_service.post_process(mask=pre_processed_image)
-        show_scaled(f"Post Processed Image", processed_image)
-        self.logger.info("Image postprocessing completed.")
-        return processed_image
 
     def _is_roller(self):
         pass
@@ -47,11 +27,25 @@ class InspectionService:
     def _is_close(self):
         pass
 
+    def get_pre_processed_image(self):
+        return self._pre_mask_image
+    
+    def get_post_processed_image(self):
+        return self._post_mask_image
+    
+    def get_contours(self):
+        return self._post_processor.get_contours()
+
     def inspect(self, image : np.ndarray):
         try:
-            self._load_config()
-            pre_processed_image = self._pre_process_image(image=image)
-            post_processed_image = self._post_process_image(pre_processed_image=pre_processed_image)
+            self._pre_mask_image = self._pre_processor.process_image(image=image)
+            self._post_mask_image = self._post_processor.post_process(self._pre_mask_image)
+            self._contours = self._post_processor.get_contours()
+
+            # Debug visualization
+            show_scaled(f"Pre-Processed Image", self._pre_mask_image)
+            show_scaled(f"Post-Processed Mask", self._post_mask_image,)
+            
             cv2.waitKey(0)
             cv2.destroyAllWindows()
             roller_status = self._is_roller()
@@ -64,5 +58,6 @@ class InspectionService:
 
 
 if __name__ == "__main__":
-    service = InspectionService()
-    service.inspect()
+    # service = InspectionService()
+    # service.inspect()
+    print("Inspection Service Module")

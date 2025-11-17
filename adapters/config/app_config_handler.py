@@ -80,3 +80,15 @@ class AppConfigHandler:
         """
         config_data = AppConfigHandler._load_config()
         return config_data.get("judgement_options", {})
+    
+    @staticmethod
+    def get_loop_delay_seconds() -> int:
+        """Retrieve loop delay seconds from config.
+        If not found, returns default of 30 seconds.
+        Data structure:
+        {
+            "loop_delay_seconds": int
+        }
+        """
+        config_data = AppConfigHandler._load_config()
+        return config_data.get("loop_delay_seconds", 30)
