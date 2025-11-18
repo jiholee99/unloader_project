@@ -3,14 +3,16 @@ import numpy as np
 from exceptions.exception import ImageGrabException
 from core.interfaces import Grabber
 
+from utils.logger import get_logger
 
 class CameraGrabber(Grabber):
     def __init__(self, config: dict = {}):
         self.capture = None
         self.config = config
+        self.logger = get_logger("CameraGrabber")
 
     def __del__(self):
-        print("Releasing camera resources...")
+        self.logger.warning("Releasing camera resources. Make sure this call is made only when runner is terminating.")
         self.close()
 
     def init_grabber(self):

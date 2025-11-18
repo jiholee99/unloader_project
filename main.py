@@ -6,10 +6,10 @@ from app.runner import Runner
 def main():
     logger = get_logger("Main")
     try:
-        logger.info("Application started.")
+        logger.info("------Application started.------")
         runner = Runner()
         runner.run()
-        logger.info("Application finished successfully.")
+        logger.info("------Application finished successfully.------")
     except AppException as e:
        logger.error(f"{e}")
     except Exception as e:

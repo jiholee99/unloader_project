@@ -17,18 +17,17 @@ from utils.logger import get_logger
 
 
 class TestSequence:
-    def __init__(self):
+    def __init__(self, inspection_service: InspectionService, grabber_service: ImageGrabService):
         self.logger = get_logger("Test Sequence")
+        self.inspection_service = inspection_service
+        self.grabber_service = grabber_service
 
     def _grab_image(self) -> np.ndarray:
-        grabber = CameraGrabber()
-        image_grab_service = ImageGrabService(grabber=grabber)
-        image = image_grab_service.grab_image()
+        image = self.grabber_service.grab_image()
         return image
     
     def _run_inspection(self, image):
-        inspection_service = InspectionFactory.create()
-        inspection_service.inspect(image)
+        self.inspection_service.inspect(image)
 
     def _grab_all_images(self):
         raise NotImplementedError("Multi-image grabbing not implemented yet.")
@@ -46,7 +45,6 @@ class TestSequence:
             self.logger.info("Grabbed image successfully.")
 
             # Inspection Service Setup
-            config = AppConfigAdapter()
             self._run_inspection(grabbed_image)
 
             # Send signal to two other pi to grab images
@@ -59,4 +57,4 @@ class TestSequence:
             self._upload_results()
 
         except Exception as e:
-            raise SequenceException("Error occurred during sequence execution.", e)
+            raise SequenceException("Sequence Error occurred during sequence execution.", e)

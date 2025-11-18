@@ -52,3 +52,13 @@ class SequenceException(AppException):
     """Exception raised during sequence execution errors."""
     def __init__(self, message="Sequence execution error occurred.", original_exception=None):
         super().__init__(message, original_exception)
+
+class FactoryException(AppException):
+    """Exception raised during factory creation errors."""
+    def __init__(self, message="Factory creation error occurred.", original_exception=None):
+        super().__init__(message, original_exception)
+
+class RunnerException(AppException):
+    """Exception raised during runner execution errors."""
+    def __init__(self, message="Runner execution error occurred.", original_exception=None):
+        super().__init__(message, original_exception)
