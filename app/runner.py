@@ -1,11 +1,13 @@
 import time
 from app.sequence import Sequence
+from tests.test_sequence import TestSequence
 from adapters.config import AppConfigAdapter
 from utils.logger import get_logger
 
 class Runner:
     def __init__(self):
-        self.sequence = Sequence()
+        # self.sequence = Sequence()
+        self.sequence = TestSequence()
         self.logger = get_logger("Runner")
         
     def run(self):

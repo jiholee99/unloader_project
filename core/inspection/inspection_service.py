@@ -38,6 +38,7 @@ class InspectionService:
 
     def inspect(self, image : np.ndarray):
         try:
+            show_scaled("Original Image", image)
             self._pre_mask_image = self._pre_processor.process_image(image=image)
             self._post_mask_image = self._post_processor.post_process(self._pre_mask_image)
             self._contours = self._post_processor.get_contours()

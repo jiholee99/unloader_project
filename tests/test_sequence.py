@@ -3,7 +3,7 @@ from app.factory import InspectionFactory
 # Adapters
 from adapters.config import AppConfigAdapter
 from adapters.image_process import ImagePreprocessor
-from adapters.image_grab import CameraGrabber
+from adapters.image_grab import CameraGrabber, FileGrabber
 # Core Services
 from core.image_grab import ImageGrabService
 from core.inspection import ImagePreprocessService, ImagePostProcessorService, InspectionService
@@ -16,15 +16,16 @@ import numpy as np
 from utils.logger import get_logger
 
 
-class Sequence:
+class TestSequence:
     def __init__(self):
-        self.logger = get_logger("Sequence")
+        self.logger = get_logger("Test Sequence")
 
     def _grab_image(self) -> np.ndarray:
-        windows_camera = CameraGrabber()
-        image_grab_service = ImageGrabService(grabber=windows_camera)
+        grabber = CameraGrabber()
+        image_grab_service = ImageGrabService(grabber=grabber)
         image = image_grab_service.grab_image()
         return image
+    
     def _run_inspection(self, image):
         inspection_service = InspectionFactory.create()
         inspection_service.inspect(image)
