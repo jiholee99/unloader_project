@@ -1,6 +1,6 @@
 import time
 from app.sequence import Sequence
-from tests.test_sequence import TestSequence
+from test.test_sequence import TestSequence
 from adapters.config import AppConfigAdapter
 from utils.logger import get_logger
 from app.factory import InspectionFactory, CameraGrabberFactory

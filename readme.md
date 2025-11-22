@@ -13,11 +13,19 @@ A Python-based GUI application (PySide6) for roller image processing and distanc
 
 ## Project Enviornment Setup (Rasberry PI)
 ```bash
-python -m venv .venv
-source .venv/bin/activate     # On Linux/macOS
-.venv\Scripts\activate        # On Windows
-pip install -r requirements.txt
-pip3 install pyside6
+pip install uv
+- After installing uv,
+uv sync
+```
+
+## To Run the project
+### Main CLI of the app
+```bash
+uv python -m main
+```
+### GUI Debugger
+```bash
+uv python -m ui.main
 ```
 
 # Important Notes
