@@ -1,0 +1,38 @@
+from exceptions.exception import InspectionStepException
+from core.interfaces import InspectionStep
+from adapters.image_process import ImagePreprocessor
+from adapters.config import AppConfigAdapter
+from adapters.image_process import ImagePreprocessor
+import numpy as np
+
+class BinaryMaskGenerationStep(InspectionStep):
+    def execute(self, image : any, min_threshold: int = 55, max_threshold: int = 255) -> np.ndarray:
+        """
+        Apply thresholding to the given grayscale image.
+        Returns the binary mask.
+        """
+        try:
+            return self.preprocessor.apply_threshold(gray_image=image, min_threshold=min_threshold, max_threshold=max_threshold)
+        except Exception as e:
+            raise InspectionStepException("Failed to apply threshold during binary mask generation step.", e)
+
+
+class CropROIGenerationStep(InspectionStep):
+    def execute(self, image, roi_coords : list):
+        """
+        Crop the region of interest (ROI) from the given image based on the image type.
+        """
+        try:
+            return ImagePreprocessor.crop_roi(image, *roi_coords)
+        except Exception as e:
+            raise InspectionStepException("Failed to crop ROI during crop ROI generation step.", e)
+
+class RemoveBrightLineStep(InspectionStep):
+    def execute(self, image, orientation: str = 'horizontal'):
+        """
+        Remove bright line from the given image based on the specified orientation.
+        """
+        try:
+            return ImagePreprocessor.preprocess_remove_bright_line(img=image, orientation=orientation)
+        except Exception as e:
+            raise InspectionStepException("Failed to remove bright line during remove bright line step.", e)

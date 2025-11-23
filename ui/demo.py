@@ -1,114 +1,70 @@
-import sys
-import cv2
-import numpy as np
+from PySide6.QtWidgets import QApplication, QWidget, QHBoxLayout, QPushButton, QLabel, QVBoxLayout
 
-from PySide6.QtWidgets import (
-    QApplication, QWidget, QLabel, QVBoxLayout, QSlider
-)
-from PySide6.QtCore import Qt, Signal, QSize
-from PySide6.QtGui import QPixmap, QImage
-
-
-def to_pixmap(img) -> QPixmap:
-    """Convert numpy/OpenCV image to QPixmap."""
-    h, w = img.shape[:2]
-    if img.ndim == 2:
-        qimg = QImage(img.data, w, h, w, QImage.Format_Grayscale8)
-    else:
-        qimg = QImage(img.data, w, h, img.strides[0], QImage.Format_RGB888)
-    return QPixmap.fromImage(qimg)
-
-
-class ScaledImageView(QLabel):
-    """A QLabel that automatically scales the pixmap to fill the widget."""
-
+class RatioWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self._pixmap = None
-        self.setAlignment(Qt.AlignCenter)
-        self.setStyleSheet("background:#222; border:1px solid gray;")
 
-    def set_image(self, pixmap: QPixmap):
-        """Set image and trigger repaint."""
-        self._pixmap = pixmap
-        self.update()
+        # Main vertical layout (button + content)
+        main_layout = QVBoxLayout(self)
 
-    def resizeEvent(self, event):
-        """Re-scale on every resize."""
-        self.update()
+        # Create button
+        self.button = QPushButton("Switch Ratio")
+        self.button.clicked.connect(self.switch_ratio)
 
-    def paintEvent(self, event):
-        """Custom paint to auto-scale pixmap."""
-        if self._pixmap:
-            scaled = self._pixmap.scaled(
-                self.size(),
-                Qt.KeepAspectRatio,
-                Qt.SmoothTransformation
-            )
-            painter = QtGui.QPainter(self)
-            painter.drawPixmap(
-                (self.width() - scaled.width()) // 2,
-                (self.height() - scaled.height()) // 2,
-                scaled
-            )
+        # Content layout (horizontal)
+        self.h_layout = QHBoxLayout()
+
+        # Three widgets
+        self.w1 = QLabel("A")
+        self.w2 = QLabel("B")
+        self.w3 = QLabel("C")
+
+        # Give each widget a background color
+        self.w1.setStyleSheet("background-color: #FF9999; font-size: 24px;")
+        self.w2.setStyleSheet("background-color: #99FF99; font-size: 24px;")
+        self.w3.setStyleSheet("background-color: #9999FF; font-size: 24px;")
+
+        # Center text
+        self.w1.setAlignment(Qt.AlignCenter)
+        self.w2.setAlignment(Qt.AlignCenter)
+        self.w3.setAlignment(Qt.AlignCenter)
+
+        # Add widgets
+        self.h_layout.addWidget(self.w1)
+        self.h_layout.addWidget(self.w2)
+        self.h_layout.addWidget(self.w3)
+
+        # Default 3:3:3 ratio
+        self.h_layout.setStretch(0, 3)
+        self.h_layout.setStretch(1, 3)
+        self.h_layout.setStretch(2, 3)
+
+        # Add layouts
+        main_layout.addWidget(self.button)
+        main_layout.addLayout(self.h_layout)
+
+        # Toggle state
+        self.state = 0
+
+    def switch_ratio(self):
+        if self.state == 0:
+            # Switch to 6:1:1 ratio
+            self.h_layout.setStretch(0, 6)
+            self.h_layout.setStretch(1, 1)
+            self.h_layout.setStretch(2, 1)
+            self.state = 1
         else:
-            super().paintEvent(event)
-
-
-class ThresholdView(QWidget):
-    threshold_changed = Signal(int)
-
-    def __init__(self):
-        super().__init__()
-
-        self.image_view = ScaledImageView()
-
-        self.slider = QSlider(Qt.Horizontal)
-        self.slider.setRange(0, 255)
-        self.slider.setValue(128)
-
-        layout = QVBoxLayout()
-        layout.addWidget(self.image_view)
-        layout.addWidget(self.slider)
-        self.setLayout(layout)
-
-        self.slider.valueChanged.connect(self.threshold_changed)
-
-
-class ThresholdController:
-    def __init__(self, view):
-        self.view = view
-
-        # Load a sample image
-        test_path = r"assets\test_images\full.jpeg"  # change path
-        self.original = cv2.cvtColor(cv2.imread(test_path), cv2.COLOR_BGR2RGB)
-
-        view.threshold_changed.connect(self.apply_threshold)
-        self.apply_threshold(view.slider.value())
-
-    def apply_threshold(self, value):
-        gray = cv2.cvtColor(self.original, cv2.COLOR_RGB2GRAY)
-        _, mask = cv2.threshold(gray, value, 255, cv2.THRESH_BINARY)
-
-        pix = to_pixmap(mask)
-        self.view.image_view.set_image(pix)
-
-
-class App(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.view = ThresholdView()
-        self.ctrl = ThresholdController(self.view)
-
-        layout = QVBoxLayout()
-        layout.addWidget(self.view)
-        self.setLayout(layout)
+            # Back to 3:3:3
+            self.h_layout.setStretch(0, 3)
+            self.h_layout.setStretch(1, 3)
+            self.h_layout.setStretch(2, 3)
+            self.state = 0
 
 
 if __name__ == "__main__":
-    from PySide6 import QtGui  # needed for QPainter
-    app = QApplication(sys.argv)
-    window = App()
-    window.resize(800, 600)
+    from PySide6.QtCore import Qt
+    app = QApplication([])
+    window = RatioWindow()
+    window.resize(900, 300)
     window.show()
-    sys.exit(app.exec())
+    app.exec()

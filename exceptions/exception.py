@@ -62,3 +62,8 @@ class RunnerException(AppException):
     """Exception raised during runner execution errors."""
     def __init__(self, message="Runner execution error occurred.", original_exception=None):
         super().__init__(message, original_exception)
+
+class InspectionStepException(AppException):
+    """Exception raised during inspection step errors."""
+    def __init__(self, message="Inspection step error occurred.", original_exception=None):
+        super().__init__(message, original_exception)

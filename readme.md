@@ -1,13 +1,17 @@
 # Unloader Project
 
 A Python-based GUI application (PySide6) for roller image processing and distance validation.
-
+Inspection is designed to work on any system. (Might have to tweak what gets passed into inspection service)
 ---
 
-## Requirements
-- Python 3.10 or higher
-- pip (Python package manager)
+# Service Overview
+- Service below are created to be independent and flexible
+- ![Service overview](Service_Overview.png)
 
+## Requirements
+- python version specified in .python-version
+- uv
+- picamera2
 ---
 
 

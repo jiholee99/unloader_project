@@ -3,7 +3,7 @@ from app.sequence import Sequence
 from test.test_sequence import TestSequence
 from adapters.config import AppConfigAdapter
 from utils.logger import get_logger
-from app.factory import InspectionFactory, CameraGrabberFactory
+from app.factories import InspectionFactory, CameraGrabberFactory
 from exceptions.exception import RunnerException
 class Runner:
     def __init__(self):

@@ -1,5 +1,5 @@
 # Factories
-from app.factory import InspectionFactory
+from app.factories import InspectionFactory
 # Adapters
 from adapters.config import AppConfigAdapter
 from adapters.image_process import ImagePreprocessor
