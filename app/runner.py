@@ -1,5 +1,5 @@
 import time
-from app.sequence import Sequence
+# from app.sequence import Sequence
 from test.test_sequence import TestSequence
 from adapters.config import AppConfigAdapter
 from utils.logger import get_logger
@@ -19,7 +19,7 @@ class Runner:
             self.sequence = TestSequence(inspection_service=inspection_service, grabber_service=grabber_service)
             # Repeatedly runs the sequence every 30 seconds
             while True:
-                try:
+                try: 
                     self.logger.info("Starting sequence run...")
                     self.sequence.run()
                     self.logger.info("Sequence run completed. Sleeping for 30 seconds...")

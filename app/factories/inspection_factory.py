@@ -1,7 +1,7 @@
 from adapters.image_process import ImagePreprocessor, ImagePostProcessor
 from adapters.config import AppConfigAdapter
 from core.inspection import ImagePreprocessService, ImagePostProcessorService, InspectionService
-
+from core.inspection.inspection_task import RollerPositionInspectionTask
 from exceptions.exception import FactoryException
 
 from utils.logger import get_logger
@@ -14,18 +14,8 @@ class InspectionFactory:
         try:
             logger.info("Creating Inspection Service...")
             config = AppConfigAdapter()
-            preprocessor = ImagePreprocessor()
-            postprocessor = ImagePostProcessor()
-            pre = ImagePreprocessService(
-                preProcessor=preprocessor,
-                config=config.load_preprocess(),
-                roi_coords=config.load_roi()
-            )
-            post = ImagePostProcessorService(
-                post_processor=postprocessor,
-                config=config.load_postprocess()
-            )
+            roller_close_task = RollerPositionInspectionTask()
             logger.info("Inspection Service created successfully.")
-            return InspectionService(pre, post)
+            return InspectionService([roller_close_task])
         except Exception as e:
             raise FactoryException("Failed to create Inspection Service.", e)

@@ -1,5 +1,5 @@
 from core.image_grab import ImageGrabService
-from adapters.image_grab import CameraGrabber, PiCameraGrabber
+from adapters.image_grab import CameraGrabber
 
 from exceptions.exception import FactoryException
 
@@ -19,14 +19,3 @@ class CameraGrabberFactory:
         except Exception as e:
             raise FactoryException("Failed to create Camera Grabber Service.", e)
         
-class PiCameraGrabberFactory:
-    @staticmethod
-    def create():
-        try:
-            logger.info("Creating Pi Camera Grabber Service...")
-            pi_camera = PiCameraGrabber()
-            image_grab_service = ImageGrabService(grabber=pi_camera)
-            logger.info("Pi Camera Grabber Service created successfully.")
-            return image_grab_service
-        except Exception as e:
-            raise FactoryException("Failed to create Pi Camera Grabber Service.", e)

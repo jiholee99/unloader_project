@@ -67,3 +67,8 @@ class InspectionStepException(AppException):
     """Exception raised during inspection step errors."""
     def __init__(self, message="Inspection step error occurred.", original_exception=None):
         super().__init__(message, original_exception)
+
+class InspectionTaskException(AppException):
+    """Exception raised during inspection task errors."""
+    def __init__(self, message="Inspection task error occurred.", original_exception=None):
+        super().__init__(message, original_exception)

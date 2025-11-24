@@ -1,5 +1,4 @@
 import numpy as np
-from picamera2 import Picamera2
 from exceptions.exception import ImageGrabException
 from core.interfaces import Grabber
 from utils.logger import get_logger
@@ -20,6 +19,7 @@ class PiCameraGrabber(Grabber):
     def init_grabber(self):
         """Initialize the PiCamera once."""
         try:
+            from picamera2 import Picamera2
             self.camera = Picamera2()
 
             # Load configuration (resolution, format, etc.)

@@ -3,7 +3,6 @@ from app.factories import InspectionFactory
 # Adapters
 from adapters.config import AppConfigAdapter
 from adapters.image_process import ImagePreprocessor
-from adapters.image_grab import CameraGrabber, FileGrabber
 # Core Services
 from core.image_grab import ImageGrabService
 from core.inspection import ImagePreprocessService, ImagePostProcessorService, InspectionService

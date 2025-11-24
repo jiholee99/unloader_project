@@ -2,6 +2,7 @@
 
 A Python-based GUI application (PySide6) for roller image processing and distance validation.
 Inspection is designed to work on any system. (Might have to tweak what gets passed into inspection service)
+Inspection is being worked on to implment other inspection in the future.
 ---
 
 # Service Overview

@@ -5,6 +5,7 @@ class AppConfigAdapter:
     def load_postprocess(self): return AppConfigHandler.get_postprocess_options()
     def load_judgement(self): return AppConfigHandler.get_judgement_options()
     def load_loop_delay(self): return AppConfigHandler.get_loop_delay_seconds()
+    def load_roller_close_task_options(self): return AppConfigHandler.get_roller_close_task_options()
     def load_roi(self): 
         roi = AppConfigHandler.get_roi_settings()
         return [roi["x"], roi["y"], roi["w"], roi["h"]]

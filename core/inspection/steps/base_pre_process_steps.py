@@ -12,7 +12,7 @@ class BinaryMaskGenerationStep(InspectionStep):
         Returns the binary mask.
         """
         try:
-            return self.preprocessor.apply_threshold(gray_image=image, min_threshold=min_threshold, max_threshold=max_threshold)
+            return ImagePreprocessor.apply_threshold(gray_image=image, min_threshold=min_threshold, max_threshold=max_threshold)
         except Exception as e:
             raise InspectionStepException("Failed to apply threshold during binary mask generation step.", e)
 

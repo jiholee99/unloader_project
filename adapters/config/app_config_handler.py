@@ -92,3 +92,23 @@ class AppConfigHandler:
         """
         config_data = AppConfigHandler._load_config()
         return config_data.get("loop_delay_seconds", 30)
+    
+    @staticmethod
+    def get_roller_close_task_options() -> dict:
+        """Retrieve roller close task options from config.
+        If not found, returns empty dict.
+        Data structure:
+        {
+            "min_threshold" : 100,
+            "max_threshold" : 255,
+            "crop_roi" : {
+                "x": 200,
+                "y": 150,
+                "w": 100,
+                "h": 100
+            },
+            "use_remove_bright_line" : true
+        }
+        """
+        config_data = AppConfigHandler._load_config()
+        return config_data.get("roller_close_task_options", {})

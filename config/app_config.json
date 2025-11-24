@@ -25,5 +25,17 @@
     "postprocess_options": {
         "min_contour_area": 500,
         "use_fill_holes": true
+    },
+    "roller_close_task_options": {
+        "min_threshold" : 120,
+        "max_threshold" : 255,
+        "crop_roi" : {
+            "x": 100,
+            "y": 250,
+            "w": 600,
+            "h": 600
+        },
+        "use_remove_bright_line" : true
+
     }
 }
