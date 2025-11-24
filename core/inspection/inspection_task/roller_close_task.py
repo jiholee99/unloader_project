@@ -1,6 +1,6 @@
 from core.interfaces.inspection_task import InspectionTask
 
-from core.inspection.steps import BinaryMaskGenerationStep, CropROIGenerationStep, RemoveBrightLineStep
+from core.inspection.steps import BinaryMaskGenerationStep, CropROIGenerationStep, RemoveBrightLineStep, GrayScaleConversionStep
 from adapters.config import AppConfigAdapter
 from exceptions.exception import InspectionTaskException
 from utils.logger import get_logger
@@ -23,6 +23,7 @@ class RollerPositionInspectionTask(InspectionTask):
             # 0. Load Config
             config = AppConfigAdapter().load_roller_close_task_options()
             # 1. Crop ROI
+            image = GrayScaleConversionStep().execute(image)
             roi = config["crop_roi"]
             cropped_image = CropROIGenerationStep().execute(image, roi_coords=[roi["x"], roi["y"], roi["w"], roi["h"]])
             # 2. Generate Binary Mask

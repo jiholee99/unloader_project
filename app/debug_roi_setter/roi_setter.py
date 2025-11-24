@@ -29,20 +29,25 @@ class ImageLabel(QLabel):
         """Store original image and show scaled version."""
         self.original_image = image
         h, w, ch = image.shape
-        bytes_per_line = ch * w
-        qimg = QImage(image.data, w, h, bytes_per_line, QImage.Format_BGR888)
+        qimg = QImage(image.data, w, h, ch * w, QImage.Format_BGR888)
         self.pixmap_image = QPixmap.fromImage(qimg)
 
-        # Scale pixmap to fit label
-        display_pix = self.pixmap_image.scaled(800, 600, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        # Scale to label size (whatever it is) but keep aspect ratio
+        display_pix = self.pixmap_image.scaled(
+            self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation
+        )
+
         self.display_pixmap = display_pix
         self.setPixmap(display_pix)
 
-        # Calculate scale and offset for coordinate mapping
+        # Compute proper mapping
         self.scale_x = w / display_pix.width()
         self.scale_y = h / display_pix.height()
+
+        # Compute real offsets (pixmap centered inside label)
         self.offset_x = (self.width() - display_pix.width()) // 2
         self.offset_y = (self.height() - display_pix.height()) // 2
+
 
     def mousePressEvent(self, event):
         if not self.display_pixmap:

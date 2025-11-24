@@ -5,7 +5,7 @@ from exceptions.exception import InspectionException
 from core.inspection.image_process import ImagePreprocessService, ImagePostProcessorService
 from core.interfaces import InspectionTask
 import numpy as np
-
+from ui.debug_view import DebugImageViewer
 # Utils
 from utils.logger import get_logger
 from utils.visual_debugger import show_scaled
@@ -31,6 +31,7 @@ class InspectionService:
             self.logger.info("Inspection completed successfully.")
             show_scaled("Original Image", orginal_image)
             show_scaled("Final Inspection Image", image)
+
             
             cv2.waitKey(0)
             cv2.destroyAllWindows()
@@ -39,8 +40,8 @@ class InspectionService:
         except Exception as e:
             raise InspectionException("Inspection process error occurred.", e)
         
-
-        pass
+    def debug_save_image(self, image: np.ndarray):
+        cv2.imwrite("assets/test_images/grabbed_image.jpeg", image)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,19 @@ from adapters.image_process import ImagePreprocessor
 from adapters.config import AppConfigAdapter
 from adapters.image_process import ImagePreprocessor
 import numpy as np
+from utils.visual_debugger import show_scaled
+
+class GrayScaleConversionStep(InspectionStep):
+    def execute(self, image : any) -> np.ndarray:
+        """
+        Convert the given image to grayscale.
+        Returns the grayscale image.
+        """
+        try:
+            result = ImagePreprocessor.convert_to_grayscale(image)
+            return result
+        except Exception as e:
+            raise InspectionStepException("Failed to convert image to grayscale during grayscale conversion step.", e)
 
 class BinaryMaskGenerationStep(InspectionStep):
     def execute(self, image : any, min_threshold: int = 55, max_threshold: int = 255) -> np.ndarray:
@@ -12,7 +25,8 @@ class BinaryMaskGenerationStep(InspectionStep):
         Returns the binary mask.
         """
         try:
-            return ImagePreprocessor.apply_threshold(gray_image=image, min_threshold=min_threshold, max_threshold=max_threshold)
+            result = ImagePreprocessor.apply_threshold(gray_image=image, min_threshold=min_threshold, max_threshold=max_threshold)
+            return result
         except Exception as e:
             raise InspectionStepException("Failed to apply threshold during binary mask generation step.", e)
 

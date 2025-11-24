@@ -9,7 +9,7 @@ from core.inspection import ImagePreprocessService, ImagePostProcessorService, I
 
 # Exceptions
 from exceptions.exception import SequenceException
-
+from ui.debug_view import DebugImageViewer
 # Utils
 import numpy as np
 from utils.logger import get_logger
@@ -27,6 +27,7 @@ class TestSequence:
     
     def _run_inspection(self, image):
         self.inspection_service.inspect(image)
+        self.inspection_service.debug_save_image(image=image)
 
     def _grab_all_images(self):
         raise NotImplementedError("Multi-image grabbing not implemented yet.")
