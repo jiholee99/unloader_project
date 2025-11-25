@@ -3,7 +3,7 @@ import time
 from test.test_sequence import TestSequence
 from adapters.config import AppConfigAdapter
 from utils.logger import get_logger
-from app.factories import InspectionFactory, CameraGrabberFactory
+from app.factories import InspectionFactory, CameraGrabberFactory, FileGrabberFactory
 from exceptions.exception import RunnerException
 class Runner:
     def __init__(self):
@@ -15,7 +15,8 @@ class Runner:
     def run(self):
         try:
             inspection_service = InspectionFactory.create()
-            grabber_service = CameraGrabberFactory.create()
+            # grabber_service = CameraGrabberFactory.create()
+            grabber_service = FileGrabberFactory.create()
             self.sequence = TestSequence(inspection_service=inspection_service, grabber_service=grabber_service)
             # Repeatedly runs the sequence every 30 seconds
             while True:

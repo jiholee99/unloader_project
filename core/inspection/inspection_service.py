@@ -8,7 +8,7 @@ import numpy as np
 from ui.debug_view import DebugImageViewer
 # Utils
 from utils.logger import get_logger
-from utils.visual_debugger import show_scaled
+from utils.visual_debugger import show_scaled, overlay_filled_contours
 
 class InspectionService:
     def __init__(self, inspection_tasks : list[InspectionTask]):
@@ -24,14 +24,19 @@ class InspectionService:
 
     def inspect(self, image : np.ndarray):
         try:
+            self.logger.info("Starting inspection process...")
             orginal_image = image.copy()
             for task in self.inspection_tasks:
                 task.perform_inspection(image)
-                image = task.get_results()
+                result = task.get_results()
             self.logger.info("Inspection completed successfully.")
+            
             show_scaled("Original Image", orginal_image)
-            show_scaled("Final Inspection Image", image)
+            show_scaled("Final Inspection Image", result["binary_mask"])
 
+            show_scaled("contours", overlay_filled_contours(image=orginal_image,contours=result["contours"],random_colors=True, roi=result["roi"]))
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
             
             cv2.waitKey(0)
             cv2.destroyAllWindows()

@@ -187,6 +187,8 @@ class ROIDebugger(QWidget):
         # Update or add ROI key
         data["roi"] = self.last_coords
 
+        data["roller_close_task_options"]["crop_roi"] = self.last_coords
+
         try:
             with open(self.save_path, "w") as f:
                 json.dump(data, f, indent=4)

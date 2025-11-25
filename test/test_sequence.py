@@ -9,7 +9,7 @@ from core.inspection import ImagePreprocessService, ImagePostProcessorService, I
 
 # Exceptions
 from exceptions.exception import SequenceException
-from ui.debug_view import DebugImageViewer
+
 # Utils
 import numpy as np
 from utils.logger import get_logger

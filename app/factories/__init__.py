@@ -1,3 +1,4 @@
-from .grabber.grabber_factory import CameraGrabberFactory
+from .grabber.camera_grabber_factory import CameraGrabberFactory
 from .grabber.picamera_grabber_factory import PiCameraGrabberFactory
+from .grabber.file_grabber_factory import FileGrabberFactory
 from .inspection_factory import InspectionFactory
