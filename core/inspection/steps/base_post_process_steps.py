@@ -16,13 +16,13 @@ class FillHolesStep(InspectionStep):
         
 
 class GetContoursStep(InspectionStep):
-    def execute(self, mask_image) -> any:
+    def execute(self, mask_image, min_area = 50000) -> any:
         """
         Detect contours in the given binary mask.
         Returns the list of detected contours.
         """
         try:
-            contours = ImagePostProcessor.detect_contours(mask_image)
+            contours = ImagePostProcessor.detect_contours(mask_image, min_area=min_area)
             return contours
         except Exception as e:
             raise InspectionStepException("Failed to detect contours during contour detection step.", e)
