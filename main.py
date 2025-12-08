@@ -1,48 +1,31 @@
-# from exceptions.exception import AppException
-# from utils.logger import get_logger
-# from utils.visual_debugger import overlay_filled_contours, show_scaled
-# from app.runner import Runner
-
-# def main():
-#     logger = get_logger("Main")
-#     try:
-#         logger.info("------Application started.------")
-#         runner = Runner()
-#         runner.run()
-#         logger.info("------Application finished successfully.------")
-#     except AppException as e:
-#        logger.error(f"{e}")
-#     except Exception as e:
-#         logger.error(f"Unexpected error: {e}")
-    
-
-# if __name__ == "__main__":
-#     main()
-
-
 import argparse
+import sys
+from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QThread
+
 from exceptions.exception import AppException
+from test import viewer
 from utils.logger import get_logger
 from app.runner import Runner
+from utils.pyside_viewer import start_image_viewer   # <-- your viewer file
+
+
+class RunnerThread(QThread):
+    def __init__(self, runner):
+        super().__init__()
+        self.runner = runner
+
+    def run(self):
+        # This runs your infinite loop WITHOUT blocking the UI
+        self.runner.run()
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Roller Inspection Controller")
 
-    parser.add_argument(
-        "-picamera",
-        action="store_true",
-        help="Use Picamera as grabber"
-    )
-    parser.add_argument(
-        "-camera",
-        action="store_true",
-        help="Use USB camera as grabber"
-    )
-    parser.add_argument(
-        "-file",
-        action="store_true",
-        help="Use file grabber"
-    )
+    parser.add_argument("-picamera", action="store_true", help="Use Picamera as grabber")
+    parser.add_argument("-camera", action="store_true", help="Use USB camera as grabber")
+    parser.add_argument("-file", action="store_true", help="Use file grabber")
 
     return parser.parse_args()
 
@@ -51,18 +34,36 @@ def main():
     logger = get_logger("Main")
     args = parse_args()
 
-    logger.info("------ Application started ------")
+    # ------------------------------------------
+    # 1. Start Qt (must be main thread)
+    # ------------------------------------------
+    app = QApplication(sys.argv)
 
+    # ------------------------------------------
+    # 2. Start your PySide image viewer
+    # ------------------------------------------
+    viewer = start_image_viewer()
+    viewer.initialize_slots(["raw", "processed", "overlay"])
+
+
+    # ------------------------------------------
+    # 3. Create Runner and launch it in a thread
+    # ------------------------------------------
     try:
-        runner = Runner(args)   # pass CLI arguments into Runner
-        runner.run()
+        runner = Runner(args)
+        runner_thread = RunnerThread(runner)
+        runner_thread.start()
 
     except AppException as e:
         logger.error(f"{e}")
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
-    finally:
-        logger.info("------ Application terminated ------")
+
+    # ------------------------------------------
+    # KEEP GUI RUNNING
+    # ------------------------------------------
+    logger.info("------ Application started ------")
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":

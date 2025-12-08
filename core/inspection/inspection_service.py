@@ -9,6 +9,7 @@ from ui.debug_view import DebugImageViewer
 # Utils
 from utils.logger import get_logger
 from utils.visual_debugger import show_scaled, overlay_filled_contours
+from utils.pyside_viewer import start_image_viewer
 
 class InspectionService:
     def __init__(self, inspection_tasks : list[InspectionTask]):
@@ -30,16 +31,20 @@ class InspectionService:
                 task.perform_inspection(image)
                 result = task.get_results()
             self.logger.info("Inspection completed successfully.")
-            
-            show_scaled("Original Image", orginal_image)
-            show_scaled("Final Inspection Image", result["binary_mask"])
 
-            show_scaled("contours", overlay_filled_contours(image=orginal_image,contours=result["contours"],random_colors=True, roi=result["roi"]))
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            viewer = start_image_viewer()
+            viewer.show_image("raw",orginal_image)
+            viewer.show_image("processed",result["binary_mask"])
+            viewer.show_image("overlay",overlay_filled_contours(image=orginal_image,contours=result["contours"],random_colors=True, roi=result["roi"]))
+
+            # show_scaled("Original Image", orginal_image)
+            # show_scaled("Final Inspection Image", result["binary_mask"])
+
+            # show_scaled("contours", overlay_filled_contours(image=orginal_image,contours=result["contours"],random_colors=True, roi=result["roi"]))
+            # cv2.waitKey(1)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
             
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
             roller_status = self._is_roller()
             close_status = self._is_close()
         except Exception as e:

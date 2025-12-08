@@ -25,6 +25,7 @@ class Sequence:
         image_grab_service = ImageGrabService(grabber=windows_camera)
         image = image_grab_service.grab_image()
         return image
+    
     def _run_inspection(self, image):
         inspection_service = InspectionFactory.create()
         inspection_service.inspect(image)

@@ -25,6 +25,10 @@ class TestSequence:
         image = self.grabber_service.grab_image()
         return image
     
+    def _save_image(self, image: np.ndarray, path: str = "assets/test_images/grabbed_image.jpeg") -> None:
+        import cv2
+        cv2.imwrite(path, image)
+
     def _run_inspection(self, image):
         self.inspection_service.inspect(image)
         self.inspection_service.debug_save_image(image=image)
@@ -42,6 +46,7 @@ class TestSequence:
         try:
             self.logger.info("Grabbing image...")
             grabbed_image = self._grab_image()
+            self._save_image(grabbed_image)
             self.logger.info("Grabbed image successfully.")
 
             # Inspection Service Setup

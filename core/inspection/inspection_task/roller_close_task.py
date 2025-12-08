@@ -60,11 +60,10 @@ class RollerPositionInspectionTask(InspectionTask):
 
         self.return_data["contours"] = contours
 
-        self.logger.info(
-            f"Total contours detected: {self.return_data['contours_info']}"
-        )
+        # self.logger.info(
+        #     f"Total contours detected: {self.return_data['contours_info']}"
+        # )
 
-        self.logger.info(f"contours : {self.return_data['contours']}")
 
     def perform_inspection(self, image):
         try:
@@ -79,6 +78,8 @@ class RollerPositionInspectionTask(InspectionTask):
             self._postprocess(binary_mask, config)
 
             self.logger.info(f"{self.name} completed successfully.")
+
+            return {}
 
         except Exception as e:
             raise InspectionTaskException(
