@@ -1,8 +1,9 @@
 # Unloader Project
 
-A Python-based GUI application (PySide6) for roller image processing and distance validation.
-Inspection is designed to work on any system. (Might have to tweak what gets passed into inspection service)
-Inspection is being worked on to implment other inspection in the future.
+- Python Open CV based project to detect roller on the unloader
+- Inspection is designed to work on any system. 
+    - (Might have to tweak what gets passed into inspection service)
+- Work in progress
 ---
 
 # Service Overview
@@ -15,23 +16,26 @@ Inspection is being worked on to implment other inspection in the future.
 - picamera2
 ---
 
-
 ## Project Enviornment Setup (Rasberry PI)
 ```bash
+# Step 1 : Installing Picamera-Python 
+sudo apt update
+sudo apt install -y python3-picamera2
+
+# Step 2 : Installing UV for dependency management
 pip install uv
-- After installing uv,
+
+# Step 3 : This step will import and install all necessary modules
 uv sync
 ```
 
 ## To Run the project
-### Main CLI of the app
 ```bash
-uv python -m main
-```
-### GUI Debugger
-```bash
-uv python -m ui.main
+# To grab with file
+uv python -m main -file
+# To grab with camera (regular usb camera)
+uv python -m main -camera
+# To grab with picamera (for rasberry pi)
+uv python -m main -picamera
 ```
 
-# Important Notes
-- Right now test app with main.py.
