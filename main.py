@@ -1,73 +1,69 @@
+# from exceptions.exception import AppException
+# from utils.logger import get_logger
+# from utils.visual_debugger import overlay_filled_contours, show_scaled
+# from app.runner import Runner
+
+# def main():
+#     logger = get_logger("Main")
+#     try:
+#         logger.info("------Application started.------")
+#         runner = Runner()
+#         runner.run()
+#         logger.info("------Application finished successfully.------")
+#     except AppException as e:
+#        logger.error(f"{e}")
+#     except Exception as e:
+#         logger.error(f"Unexpected error: {e}")
+    
+
+# if __name__ == "__main__":
+#     main()
+
+
+import argparse
 from exceptions.exception import AppException
 from utils.logger import get_logger
-from utils.visual_debugger import overlay_filled_contours, show_scaled
 from app.runner import Runner
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Roller Inspection Controller")
+
+    parser.add_argument(
+        "-picamera",
+        action="store_true",
+        help="Use Picamera as grabber"
+    )
+    parser.add_argument(
+        "-camera",
+        action="store_true",
+        help="Use USB camera as grabber"
+    )
+    parser.add_argument(
+        "-file",
+        action="store_true",
+        help="Use file grabber"
+    )
+
+    return parser.parse_args()
+
 
 def main():
     logger = get_logger("Main")
+    args = parse_args()
+
+    logger.info("------ Application started ------")
+
     try:
-        logger.info("------Application started.------")
-        runner = Runner()
+        runner = Runner(args)   # pass CLI arguments into Runner
         runner.run()
-        logger.info("------Application finished successfully.------")
+
     except AppException as e:
-       logger.error(f"{e}")
+        logger.error(f"{e}")
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
-    # # 1️⃣ Load an image
-    # image_path = r"assets\test_images\full.jpeg"  # change to your image path
-    # # image_path = r"assets/test_images/full.jpeg"  # For Linux
-    # image = cv2.imread(image_path)
-
-    # if image is None:
-    #     print("❌ Could not load image. Check the path.")
-    #     return
-
-    # try:
-    #     # Config options
-    #     pre_process_options = AppConfigHandler.get_preprocess_options()
-    #     post_process_options = AppConfigHandler.get_postprocess_options()
-    #     judgement_options = AppConfigHandler.get_judgement_options()
-        
-    #     # Preprocess
-    #     logger.info("Starting image preprocessing...")
-    #     pre_process_service = ImagePreprocessService(options=pre_process_options)
-    #     roi = AppConfigHandler.get_roi_settings()
-    #     roi_coords = [roi["x"], roi["y"], roi["w"], roi["h"]]
-    #     processed_mask = pre_process_service.process_image(image=image, roi_coords=roi_coords,)
-    #     show_scaled(f"Processed Mask", processed_mask)
-    #     logger.info("Image preprocessing completed.")
-
-    #     # post-process
-    #     logger.info("Starting image post-processing...")
-    #     post_processor_service = ImagePostProcessorService(options=post_process_options)
-    #     post_processed_img = post_processor_service.post_process(processed_mask)
-    #     # post_processor_service.log_contour_info()
-    #     show_scaled(f"Post Processed Mask", post_processed_img)
-    #     logger.info("Image post-processing completed.")
-
-    #     # Visual debug contours overlay
-    #     from utils.visual_debugger import overlay_filled_contours
-    #     blended_image = overlay_filled_contours(image=pre_process_service.get_roi_image(), contours=post_processor_service.get_contours())
-    #     show_scaled(f"Contours using post processed image", blended_image)
-
-
-    #     # 5️⃣ Validate distance using DistanceValidator
-    #     validator = FullnessValidator()
-    #     cutoff_point = judgement_options.get("fullness_cutoff", 0.5)  # example cutoff
-    #     is_valid_fullness_pre = validator.is_valid(processed_mask, pre_process_options.get("threshold", 0), cutoff_point)
-    #     is_valid_fullness_post = validator.is_valid(post_processed_img, pre_process_options.get("threshold", 0), cutoff_point)
-    #     print(f"✅ Fullness Valid (Pre-processed): {is_valid_fullness_pre}")
-    #     print(f"✅ Fullness Valid (Post-processed): {is_valid_fullness_post}")
-
-    # except AppException as e:
-    #     get_logger().error(f"{e}")
-
-    # print("Press any key to close windows...")
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    finally:
+        logger.info("------ Application terminated ------")
 
 
 if __name__ == "__main__":
     main()
-

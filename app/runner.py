@@ -3,20 +3,30 @@ import time
 from test.test_sequence import TestSequence
 from adapters.config import AppConfigAdapter
 from utils.logger import get_logger
-from app.factories import InspectionFactory, CameraGrabberFactory, FileGrabberFactory
+from app.factories import InspectionFactory, CameraGrabberFactory, FileGrabberFactory, PiCameraGrabberFactory
 from exceptions.exception import RunnerException
+
 class Runner:
-    def __init__(self):
+    def __init__(self, args):
         # self.sequence = Sequence()
         # Define service here so that they can be alive throughout the runner's lifetime (scope issue)
         self.sequence = None
         self.logger = get_logger("Runner")
+        self.args = args
+    
+    def select_grabber(self):
+        if self.args.picamera:
+            return PiCameraGrabberFactory.create()
+        if self.args.camera:
+            return CameraGrabberFactory.create()
+        return FileGrabberFactory.create()
         
     def run(self):
         try:
             inspection_service = InspectionFactory.create()
             # grabber_service = CameraGrabberFactory.create()
-            grabber_service = FileGrabberFactory.create()
+            # grabber_service = FileGrabberFactory.create()
+            grabber_service = self.select_grabber()
             self.sequence = TestSequence(inspection_service=inspection_service, grabber_service=grabber_service)
             # Repeatedly runs the sequence every 30 seconds
             while True:
