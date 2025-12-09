@@ -21,29 +21,32 @@ class ImagePostProcessor:
         Fill holes inside black objects (white background)
         by detecting and filling inner contours.
         """
-        # Ensure binary
+        # # Ensure binary
+        # mask = (mask > 0).astype(np.uint8) * 255
+
+        # # Invert because we want the object to be white for contour detection
+        # inv = cv2.bitwise_not(mask)
+
+        # # Find contours and hierarchy
+        # contours, hierarchy = cv2.findContours(inv, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+
+        # if hierarchy is None:
+        #     return mask
+
+        # # Draw and fill only the internal (child) contours
+        # for i in range(len(contours)):
+        #     # hierarchy[i][3] == -1 → no parent (external)
+        #     # hierarchy[i][3] != -1 → has parent (hole)
+        #     if hierarchy[0][i][3] != -1:
+        #         cv2.drawContours(inv, contours, i, 255, -1)  # Fill hole
+
+        # # Invert back to black object, white background
+        # filled = cv2.bitwise_not(inv)
+
+        # return filled
         mask = (mask > 0).astype(np.uint8) * 255
-
-        # Invert because we want the object to be white for contour detection
-        inv = cv2.bitwise_not(mask)
-
-        # Find contours and hierarchy
-        contours, hierarchy = cv2.findContours(inv, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
-
-        if hierarchy is None:
-            return mask
-
-        # Draw and fill only the internal (child) contours
-        for i in range(len(contours)):
-            # hierarchy[i][3] == -1 → no parent (external)
-            # hierarchy[i][3] != -1 → has parent (hole)
-            if hierarchy[0][i][3] != -1:
-                cv2.drawContours(inv, contours, i, 255, -1)  # Fill hole
-
-        # Invert back to black object, white background
-        filled = cv2.bitwise_not(inv)
-
-        return filled
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 25))
+        return cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     
     @staticmethod
     def is_contour_square(contour, epsilon=0.01, side_ratio_tol=0.15, angle_tol=15):

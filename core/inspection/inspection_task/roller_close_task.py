@@ -7,7 +7,6 @@ from utils.logger import get_logger
 from utils.visual_debugger import overlay_filled_contours
 import cv2
 
-
 class RollerPositionInspectionTask(InspectionTask):
     def __init__(self):
         self.result = None
@@ -22,6 +21,7 @@ class RollerPositionInspectionTask(InspectionTask):
         raise NotImplementedError("Pipeline creation not implemented yet.")
 
     def _preprocess(self, image, config):
+        self.logger.info(f"Starting {self.name} preprocessing steps...")
         # Optional remove bright line step
         if config.get("use_remove_bright_line", False):
             image = RemoveBrightLineStep().execute(image, orientation="horizontal")
@@ -32,6 +32,7 @@ class RollerPositionInspectionTask(InspectionTask):
         cropped_image = CropROIGenerationStep().execute(
             image, roi_coords=[roi["x"], roi["y"], roi["w"], roi["h"]]
         )
+        # Save cropped image and roi for ui display
         self.return_data["cropped_image"] = cropped_image
         self.return_data["roi"] = [roi["x"], roi["y"], roi["w"], roi["h"]]
 
@@ -41,29 +42,29 @@ class RollerPositionInspectionTask(InspectionTask):
         binary_mask = BinaryMaskGenerationStep().execute(
             cropped_image, min_threshold=min_threshold, max_threshold=max_threshold
         )
+        self.return_data["preprocessed_image"] = binary_mask
 
         return binary_mask
 
     def _postprocess(self, binary_mask, config):
+        self.logger.info(f"Starting {self.name} postprocessing steps...")
         # Optional Fill holes
         if config.get("use_fill_holes", False):
             binary_mask = FillHolesStep().execute(binary_mask)
-            self.return_data["filled_mask"] = binary_mask
-
-        # 1. Detect Contours and save results
+            self.return_data["postprocessed_image"] = binary_mask
+        self.logger.info(f"{self.name} postprocessing steps completed.")
+        #  Detect Contours and save results
         min_area = config.get("min_contour_area", 50000)
         contours = GetContoursStep().execute(binary_mask, min_area=min_area)
         self.return_data["contours"] = contours
-        # 2. Log Contour Info
-        contours_info = GetContourInfoStep().execute(contours)
-        self.return_data["contours_info"] = contours_info
-
-        self.return_data["contours"] = contours
-
-        # self.logger.info(
-        #     f"Total contours detected: {self.return_data['contours_info']}"
-        # )
-
+        
+    def _analyze_results(self, config):
+        self.logger.info(f"Analyzing contours for roller shape...")
+        for contour in self.return_data["contours"] :
+            score = isContourRollerShape(contour=contour, shape_detection_options=config["shape_detection_options"])
+            self.logger.info(f"{repr(contour)} - Roller Shape Score: {score}")
+            contour.score = score
+        
 
     def perform_inspection(self, image):
         try:
@@ -76,6 +77,7 @@ class RollerPositionInspectionTask(InspectionTask):
             self.return_data["binary_mask"] = binary_mask
 
             self._postprocess(binary_mask, config)
+            self._analyze_results(config)
 
             self.logger.info(f"{self.name} completed successfully.")
 

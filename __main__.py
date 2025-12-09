@@ -15,6 +15,7 @@ def start():
     # decide which factory to use
     if args.mode == "camera":
         factory = CameraGrabberFactory
+        print("Using CameraGrabberFactory")
     elif args.mode == "picamera":
         # from adapters.picamera_grabber import PiCameraGrabberFactory
         # factory = PiCameraGrabberFactory

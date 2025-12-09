@@ -1,7 +1,7 @@
 from exceptions.exception import InspectionStepException
 from core.interfaces import InspectionStep
 from adapters.image_process import ImagePostProcessor
-
+from model.contour import Contour
 class FillHolesStep(InspectionStep):
     def execute(self, maks_image) -> any:
         """
@@ -16,29 +16,35 @@ class FillHolesStep(InspectionStep):
         
 
 class GetContoursStep(InspectionStep):
-    def execute(self, mask_image, min_area = 50000) -> any:
+    def execute(self, mask_image, min_area = 50000) -> list[Contour]:
         """
         Detect contours in the given binary mask.
         Returns the list of detected contours.
         """
         try:
             contours = ImagePostProcessor.detect_contours(mask_image, min_area=min_area)
-            return contours
-        except Exception as e:
-            raise InspectionStepException("Failed to detect contours during contour detection step.", e)
-        
-class GetContourInfoStep(InspectionStep):
-    def execute(self, contours : list) -> any:
-        """
-        Get detailed information about a given contour.
-        Returns a dictionary with contour properties.
-        """
-        try:
             from adapters.image_process import ContourProcessor
             contours_info = []
             for contour in contours:
                 info = ContourProcessor.get_contour_info(contour)
+                info.set_contour(contour)
                 contours_info.append(info)
             return contours_info
         except Exception as e:
-            raise InspectionStepException("Failed to get contour info during contour info step.", e)
+            raise InspectionStepException("Failed to detect contours during contour detection step.", e)
+        
+# class GetContourInfoStep(InspectionStep):
+#     def execute(self, contours : list) -> list[Contour]:
+#         """
+#         Get detailed information about a given contour.
+#         Returns a dictionary with contour properties.
+#         """
+#         try:
+#             from adapters.image_process import ContourProcessor
+#             contours_info = []
+#             for contour in contours:
+#                 info = ContourProcessor.get_contour_info(contour)
+#                 contours_info.append(info)
+#             return contours_info
+#         except Exception as e:
+#             raise InspectionStepException("Failed to get contour info during contour info step.", e)

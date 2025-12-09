@@ -3,10 +3,10 @@
     "version": "1.0.0",
     "loop_delay_seconds": 5,
     "roi": {
-        "x": 1521,
-        "y": 2284,
-        "w": 1222,
-        "h": 1459
+        "x": 690,
+        "y": 1169,
+        "w": 1692,
+        "h": 1673
     },
     "judgement_options": {
         "fullness_cutoff": 0.5
@@ -27,16 +27,32 @@
         "use_fill_holes": true
     },
     "roller_close_task_options": {
-        "min_threshold": 75,
-        "max_threshold": 255,
+        "min_threshold": 90,
+        "max_threshold": 150,
         "crop_roi": {
-            "x": 1521,
-            "y": 2284,
-            "w": 1222,
-            "h": 1459
+            "x": 690,
+            "y": 1169,
+            "w": 1692,
+            "h": 1673
         },
         "use_remove_bright_line": true,
         "use_fill_holes": true,
-        "min_contour_area": 50000
+        "min_contour_area": 50000,
+        "shape_detection_options": {
+            "area": {
+                "weight": 0.3,
+                "cutoff": 70000,
+                "max_area": 1000000
+            },
+            "extent": {
+                "weight": 0.9,
+                "cutoff": 0.6
+            },
+            "solidity": {
+                "weight": 0.9,
+                "cutoff": 0.6
+            },
+            "score_cutoff": 0.6
+        }
     }
 }

@@ -15,7 +15,7 @@ class InspectionTask(Protocol):
         """Run pipeline on image and return results."""
         ...
 
-    def get_results(self) -> Dict:
+    def get_results(self) -> Dict[str, Any]:
         """Return last inspection results."""
         ...
 

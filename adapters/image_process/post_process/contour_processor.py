@@ -1,9 +1,10 @@
 import cv2
 import numpy as np
+from model.contour import Contour
 
 class ContourProcessor:
     @staticmethod
-    def get_contour_info(countour) -> dict:
+    def get_contour_info(countour) -> Contour:
         """
         Calculate area and perimeter of a contour.\n
         Properties Explained:
@@ -38,5 +39,5 @@ class ContourProcessor:
         hull = cv2.convexHull(countour)
         hull_area = cv2.contourArea(hull)
         solidity = area / hull_area
-
-        return {"area": area, "perimeter": perimeter, "bounding_box": (x, y, w, h), "aspect_ratio": aspect_ratio, "extent": extent, "solidity": solidity}
+        ct = Contour(None,area, perimeter, (x, y, w, h), aspect_ratio, extent, solidity)
+        return ct

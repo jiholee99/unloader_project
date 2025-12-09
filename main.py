@@ -8,7 +8,8 @@ from test import viewer
 from utils.logger import get_logger
 from app.runner import Runner
 from utils.pyside_viewer import start_image_viewer   # <-- your viewer file
-
+from ui import *
+from core import app_state
 
 class RunnerThread(QThread):
     def __init__(self, runner):
@@ -39,11 +40,15 @@ def main():
     # ------------------------------------------
     app = QApplication(sys.argv)
 
+    model = ViewerModel()
+    view = ViewerView(model=model)
+    controller = ViewerController(model, view)
+
     # ------------------------------------------
     # 2. Start your PySide image viewer
-    # ------------------------------------------
-    viewer = start_image_viewer()
-    viewer.initialize_slots(["raw", "processed", "overlay"])
+    # ------------------------------------------    
+    app_state.controller = controller
+    view.show()
 
 
     # ------------------------------------------
