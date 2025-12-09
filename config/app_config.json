@@ -3,10 +3,10 @@
     "version": "1.0.0",
     "loop_delay_seconds": 5,
     "roi": {
-        "x": 690,
-        "y": 1169,
-        "w": 1692,
-        "h": 1673
+        "x": 50,
+        "y": 5,
+        "w": 545,
+        "h": 458
     },
     "judgement_options": {
         "fullness_cutoff": 0.5
@@ -30,10 +30,10 @@
         "min_threshold": 90,
         "max_threshold": 150,
         "crop_roi": {
-            "x": 690,
-            "y": 1169,
-            "w": 1692,
-            "h": 1673
+            "x": 50,
+            "y": 5,
+            "w": 545,
+            "h": 458
         },
         "use_remove_bright_line": true,
         "use_fill_holes": true,
