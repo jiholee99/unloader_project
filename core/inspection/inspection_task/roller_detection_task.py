@@ -7,7 +7,7 @@ from utils.logger import get_logger
 from utils.visual_debugger import overlay_filled_contours
 import cv2
 
-class RollerPositionInspectionTask(InspectionTask):
+class RollerDetectionInspectionTask(InspectionTask):
     def __init__(self):
         self.result = None
         self.logger = get_logger(self.name)
@@ -30,7 +30,7 @@ class RollerPositionInspectionTask(InspectionTask):
         image = GrayScaleConversionStep().execute(image)
         roi = config["crop_roi"]
         cropped_image = CropROIGenerationStep().execute(
-            image, roi_coords=[roi["x"], roi["y"], roi["w"], roi["h"]]
+            image, roi_coords=[roi["x"], roi["y"], roi["w"], roi["h"]], use_roi_fallback=config.get("use_roi_fallback", False)
         )
         # Save cropped image and roi for ui display
         self.return_data["cropped_image"] = cropped_image
@@ -87,6 +87,12 @@ class RollerPositionInspectionTask(InspectionTask):
             raise InspectionTaskException(
                 f"{self.name} : Failed to perform roller position inspection.", e
             )
+    
+    def is_roller_detected(self) -> bool:
+        for contour in self.return_data.get("contours", []):
+            if contour.score >= 0.7:  # Assuming a threshold score of 0.7 for roller detection
+                return True
+        return False
 
     def get_results(self):
         return self.return_data

@@ -28,6 +28,8 @@ def parse_args():
     parser.add_argument("-camera", action="store_true", help="Use USB camera as grabber")
     parser.add_argument("-file", action="store_true", help="Use file grabber")
 
+    parser.add_argument("-testseq", action="store_true", help="Run test sequence")
+
     return parser.parse_args()
 
 

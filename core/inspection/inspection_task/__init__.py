@@ -1,1 +1,1 @@
-from .roller_close_task import RollerPositionInspectionTask
+from .roller_detection_task import RollerDetectionInspectionTask

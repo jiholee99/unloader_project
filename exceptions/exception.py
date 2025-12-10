@@ -72,3 +72,13 @@ class InspectionTaskException(AppException):
     """Exception raised during inspection task errors."""
     def __init__(self, message="Inspection task error occurred.", original_exception=None):
         super().__init__(message, original_exception)
+
+class RemoteCaptureException(AppException):
+    """Exception raised during remote capture errors."""
+    def __init__(self, message="Remote capture error occurred.", original_exception=None):
+        super().__init__(message, original_exception)
+
+class ImageUploadException(AppException):
+    """Exception raised during image upload errors."""
+    def __init__(self, message="Image upload error occurred.", original_exception=None):
+        super().__init__(message, original_exception)

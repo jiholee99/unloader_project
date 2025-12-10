@@ -13,7 +13,7 @@ class FileGrabberFactory:
         try:
             logger.info("Creating File Grabber Service...")
             # file_grabber = FileGrabber(config={"image_path": r"assets\test_images\full.jpeg"})
-            file_grabber = FileGrabber(config={"image_path": r"assets/test_images/empty.jpeg"})
+            file_grabber = FileGrabber(config={"image_path": r"assets/test_images/IMG_3030.jpeg"})
 
             image_grab_service = ImageGrabService(grabber=file_grabber)
             logger.info("File Grabber Service created successfully.")

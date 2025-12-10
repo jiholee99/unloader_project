@@ -5,7 +5,7 @@ from adapters.config import AppConfigAdapter
 from adapters.image_process import ImagePreprocessor
 import numpy as np
 from utils.visual_debugger import show_scaled
-
+from utils.logger import get_logger
 class GrayScaleConversionStep(InspectionStep):
     def execute(self, image : any) -> np.ndarray:
         """
@@ -32,13 +32,18 @@ class BinaryMaskGenerationStep(InspectionStep):
 
 
 class CropROIGenerationStep(InspectionStep):
-    def execute(self, image, roi_coords : list):
+    def execute(self, image, roi_coords : list, use_roi_fallback: bool = True):
         """
         Crop the region of interest (ROI) from the given image based on the image type.
         """
         try:
             return ImagePreprocessor.crop_roi(image, *roi_coords)
         except Exception as e:
+            if use_roi_fallback:
+                # Return the original image if cropping fails and fallback is enabled
+                logger = get_logger("CropROIGenerationStep")
+                logger.warning("Cropping ROI failed, returning original image as fallback. (Using the full image)")
+                return image
             raise InspectionStepException("Failed to crop ROI during crop ROI generation step.", e)
 
 class RemoveBrightLineStep(InspectionStep):

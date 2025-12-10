@@ -6,6 +6,8 @@ from adapters.image_process import ImagePreprocessor
 # Core Services
 from core.image_grab import ImageGrabService
 from core.inspection import ImagePreprocessService, ImagePostProcessorService, InspectionService
+from core.remote_capture import RemoteCaptureService
+from core.uploader import ImageUploaderService
 
 # Exceptions
 from exceptions.exception import SequenceException
@@ -14,6 +16,10 @@ from exceptions.exception import SequenceException
 import numpy as np
 from utils.logger import get_logger
 
+# UI State
+from core import app_state
+
+import time
 
 class TestSequence:
     def __init__(self, inspection_service: InspectionService, grabber_service: ImageGrabService):
@@ -22,35 +28,67 @@ class TestSequence:
         self.grabber_service = grabber_service
 
     def _grab_image(self) -> np.ndarray:
+        self.logger.info("Grabbing image...")
         image = self.grabber_service.grab_image()
+        # self._save_image(image=image)
+        self.logger.info("Grabbed image successfully.")
         return image
     
-    def _save_image(self, image: np.ndarray, path: str = "assets/test_images/grabbed_image.jpeg") -> None:
-        import cv2
-        cv2.imwrite(path, image)
-
     def _run_inspection(self, image):
-        self.inspection_service.inspect(image)
-        self.inspection_service.debug_save_image(image=image)
+        try:
+            # Mock inspection by just returning True
+            time.sleep(3)
+            return True
+        except Exception as e:
+            raise SequenceException("Inspection service failed during sequence execution.", e)
+
+    def _save_image(self, image: np.ndarray):
+        if app_state.controller:
+            app_state.controller.update_result(text="Saving inspection result image...")
+        import cv2
+        cv2.imwrite("assets/saved_images/inspection_result.jpeg", image)
+        if app_state.controller:
+            app_state.controller.update_result(text="Inspection result image saved successfully.")
 
     def _grab_all_images(self):
-        raise NotImplementedError("Multi-image grabbing not implemented yet.")
+        app_state.controller.update_result(text="Simulating remote image capture...") if app_state.controller else None
+        time.sleep(2)  # Simulate delay
+        app_state.controller.update_result(text="Remote image capture simulation completed.") if app_state.controller else None
+        return
+        # Pseudo code for grabbing images from remote devices
+        # remote_capture_service = RemoteCaptureService("repo")
+        # remote_capture_service.capture_all()
 
     def _attach_bobbin_info(self):
-        raise NotImplementedError("Bobbin info attachment not implemented yet.")
+        app_state.controller.update_result(text="Simulating bobbin info attachment...") if app_state.controller else None
+        time.sleep(1)  # Simulate delay
+        app_state.controller.update_result(text="Bobbin info attachment simulation completed.") if app_state.controller else None
+        return
+        # raise NotImplementedError("Bobbin info attachment not implemented yet.")
 
     def _upload_results(self):
-        raise NotImplementedError("Result upload not implemented yet.")
+        app_state.controller.update_result(text="Simulating result upload...") if app_state.controller else None
+        time.sleep(2)  # Simulate delay
+        app_state.controller.update_result(text="Result upload simulation completed.") if app_state.controller else None
+        return
+        # Pseudo code for uploading results
+        # uploader = ImageUploaderService("repo")
+        # uploader.upload("file_path")
+        # raise NotImplementedError("Result upload not implemented yet.")
 
     def run(self):
         try:
-            self.logger.info("Grabbing image...")
+            # Grab Image
             grabbed_image = self._grab_image()
-            self._save_image(grabbed_image)
-            self.logger.info("Grabbed image successfully.")
 
             # Inspection Service Setup
             self._run_inspection(grabbed_image)
+            if app_state.controller:
+                app_state.controller.update_panel(0, title="Test Sequence", image=grabbed_image)
+                app_state.controller.update_result(text="Inspection completed successfully.")
+                pass
+
+            self._save_image(grabbed_image)
 
             # Send signal to two other pi to grab images
             self._grab_all_images()
@@ -62,4 +100,7 @@ class TestSequence:
             self._upload_results()
 
         except Exception as e:
+            if app_state.controller:
+                error_text = f"Sequence Error occurred during sequence execution ->  {str(e)}"
+                app_state.controller.update_result(text=error_text)
             raise SequenceException("Sequence Error occurred during sequence execution.", e)

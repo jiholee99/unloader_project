@@ -1,7 +1,7 @@
 {
     "appname": "Unloader Project",
     "version": "1.0.0",
-    "loop_delay_seconds": 5,
+    "loop_delay_seconds": 10,
     "roi": {
         "x": 690,
         "y": 1169,
@@ -27,8 +27,9 @@
         "use_fill_holes": true
     },
     "roller_close_task_options": {
-        "min_threshold": 90,
-        "max_threshold": 150,
+        "use_roi_fallback": true,
+        "min_threshold": 60,
+        "max_threshold": 255,
         "crop_roi": {
             "x": 690,
             "y": 1169,

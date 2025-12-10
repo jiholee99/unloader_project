@@ -10,6 +10,20 @@
 - Service below are created to be independent and flexible
 - ![Service overview](Service_Overview.png)
 
+# Project flow
+### 2 Threads
+1. Start up UI view in the main thread
+2. Runner thread runs which will do roller detection, send signal to other system and upload etc
+    - Runner will call update method to update UI view
+    
+### Runner Sequence
+1. Grab Image every configured seconds
+2. Detect if there is roller or not
+3. If there is, it will detect roller is close or not
+4. If roller is in the position, save those images and make other pi slaves to do so too
+5. Upload these photos to mini PC
+6. If everything was sucessful, wait configured minutes before doing runner sequence again
+
 ## Requirements
 - python version specified in .python-version
 - uv

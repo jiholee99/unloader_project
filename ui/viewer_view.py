@@ -1,11 +1,11 @@
 # viewer/viewer_view.py
 
 from PySide6.QtWidgets import (
-    QWidget, QLabel, QVBoxLayout, QGridLayout, QSizePolicy, QTextEdit
+    QWidget, QLabel, QVBoxLayout, QGridLayout, QSizePolicy, QTextEdit, QHBoxLayout,
 )
 from PySide6.QtCore import Qt, Slot
 from utils.image_renderer import ImageRenderer
-
+from PySide6.QtGui import QTextCursor
 
 class ViewerView(QWidget):
     """
@@ -18,14 +18,15 @@ class ViewerView(QWidget):
         super().__init__()
         self.model = model
         self.setWindowTitle("MVC Multi Panel Viewer")
-        self.resize(1400, 1000)
+        self.resize(1400, 600)
 
-        self.main_layout = QVBoxLayout()
+        self.main_layout = QHBoxLayout()
         self.setLayout(self.main_layout)
 
         # ---- 2x2 grid for four panels ----
         self.grid = QGridLayout()
         self.main_layout.addLayout(self.grid)
+        self.main_layout.setStretchFactor(self.grid, 3)
 
         self.title_labels = []
         self.image_labels = []
@@ -39,8 +40,8 @@ class ViewerView(QWidget):
         # ---- Result section at bottom ----
         self.result_box = QTextEdit()
         self.result_box.setReadOnly(True)
-        self.result_box.setMinimumHeight(250)
-        self.result_box.setStyleSheet("font-size: 18px; padding: 10px;")
+        self.result_box.setMinimumHeight(150)
+        self.result_box.setStyleSheet("font-size: 12px; padding: 10px;")
         self.main_layout.addWidget(self.result_box)
 
     def _create_panel(self, index):
@@ -90,4 +91,7 @@ class ViewerView(QWidget):
 
     @Slot(str)
     def update_result(self, result_text):
-        self.result_box.setText(result_text)
+        import time
+        self.result_box.append(f"At [{time.strftime('%H:%M:%S')}] ")
+        self.result_box.append(f"- {result_text}\n\n")
+        self.result_box.moveCursor(QTextCursor.End)
