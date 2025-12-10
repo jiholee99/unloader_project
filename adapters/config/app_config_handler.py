@@ -112,3 +112,9 @@ class AppConfigHandler:
         """
         config_data = AppConfigHandler._load_config()
         return config_data.get("roller_close_task_options", {})
+
+
+    @staticmethod
+    def get_remote_camera_options() -> dict:
+        config_data = AppConfigHandler._load_config()
+        return config_data.get("remote_camera_options")

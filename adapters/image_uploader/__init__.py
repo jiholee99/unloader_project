@@ -1,1 +1,1 @@
-from .default_uploader import DefaultUploader
+from .minpc_uploader import MiniPCUploader

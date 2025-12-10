@@ -3,6 +3,8 @@ from app.factories import InspectionFactory
 # Adapters
 from adapters.config import AppConfigAdapter
 from adapters.image_process import ImagePreprocessor
+from adapters.remote_capture import DirectConnector
+from adapters.image_uploader import MiniPCUploader
 # Core Services
 from core.image_grab import ImageGrabService
 from core.inspection import ImagePreprocessService, ImagePostProcessorService, InspectionService
@@ -50,9 +52,13 @@ class TestSequence:
         if app_state.controller:
             app_state.controller.update_result(text="Inspection result image saved successfully.")
 
-    def _grab_all_images(self):
+    def _remote_capture(self):
+        return
         app_state.controller.update_result(text="Simulating remote image capture...") if app_state.controller else None
-        time.sleep(2)  # Simulate delay
+        config = AppConfigAdapter().load_remote_camera_options()
+        dirct_connector = DirectConnector(config=config)
+        remote_capture_service = RemoteCaptureService(remote_capture_repository=dirct_connector)
+        remote_capture_service.remote_capture()
         app_state.controller.update_result(text="Remote image capture simulation completed.") if app_state.controller else None
         return
         # Pseudo code for grabbing images from remote devices
@@ -68,7 +74,9 @@ class TestSequence:
 
     def _upload_results(self):
         app_state.controller.update_result(text="Simulating result upload...") if app_state.controller else None
-        time.sleep(2)  # Simulate delay
+        minpc_uploader = MiniPCUploader()
+        uploader_service = ImageUploaderService(uploader_repository=minpc_uploader)
+        uploader_service.upload(dest_path="/Samples", file_path="/home/lgvision/projects/new/unloader_project/assets/saved_images/inspection_result.jpeg")
         app_state.controller.update_result(text="Result upload simulation completed.") if app_state.controller else None
         return
         # Pseudo code for uploading results
@@ -91,7 +99,7 @@ class TestSequence:
             self._save_image(grabbed_image)
 
             # Send signal to two other pi to grab images
-            self._grab_all_images()
+            self._remote_capture()
              
             # Retrieve bobbin info from database and attach to result
             self._attach_bobbin_info()

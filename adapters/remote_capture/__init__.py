@@ -1,1 +1,1 @@
-from .master import Master
+from .direct_connector import DirectConnector

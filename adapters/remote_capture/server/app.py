@@ -80,7 +80,7 @@ class Server:
             except Exception as e:
                 self.logger.error(f"[{slave_id}] Upload error: {e}")
                 # print(f"✗ [{slave_id}] Upload error: {e}")
-                return jsonify({"error": str(e)}), 500
+                return jsonify({"error": str(e)}), 50051,dw
         
         # --------------------------------------
         self.server = None

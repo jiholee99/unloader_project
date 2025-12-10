@@ -1,7 +1,7 @@
 import time
 from datetime import datetime
 from picamera2 import Picamera2
-from master import Master
+from adapters.remote_capture.direct_connector import DirectConnector
 
 # ---------------- Camera functions ----------------
 
@@ -59,7 +59,7 @@ def main():
     SLAVES = {"slave1": False, "slave2": True}
 
     # Create Master
-    master = Master(SERVER_URL, PHOTO_DIR, SLAVE1_DIR, SLAVE2_DIR, SLAVES)
+    master = DirectConnector(SERVER_URL, PHOTO_DIR, SLAVE1_DIR, SLAVE2_DIR, SLAVES)
 
     # Initialize camera
     camera = initialize_camera()
