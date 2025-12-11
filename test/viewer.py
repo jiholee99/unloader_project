@@ -27,6 +27,17 @@ class ImageViewer(QWidget):
         layout.addWidget(self.label)
         layout.addLayout(layout_btn)
         self.setLayout(layout)
+    
+    def closeEvent(self, event):
+        from core import app_state
+        controller = app_state.controller
+
+        if controller and controller.runner_thread:
+            controller.runner_thread.request_stop()
+            controller.runner_thread.wait()  # block until thread exits
+
+        event.accept()
+
 
     # -------------------------------------------------------
     # ONE FUNCTION YOU CALL → show_image(cv_img)

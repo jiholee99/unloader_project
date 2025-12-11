@@ -53,6 +53,31 @@ class Runner:
                 error_text = f"Runner execution failed to run. Not sequence error. Probably failed to initialize. -> {str(e)}"
                 app_state.controller.update_result(text=error_text)
             raise RunnerException("Runner execution failed to run. Not sequence error. Probably failed to initialize.", e)
+        
+    def run_once(self):
+        try:
+            # Initialize services
+            if app_state.controller:
+                app_state.controller.update_result(text="Runner started. Initializing services...")
+            inspection_service = InspectionFactory.create()
+            grabber_service = self._select_grabber()
+            self.sequence = self._select_sequence(inspection_service=inspection_service, grabber_service=grabber_service)
+            if app_state.controller:
+                app_state.controller.update_result(text="Services initialized. Starting main loop...")
+            # Repeatedly runs the sequence every configured seconds
+            try: 
+                self.logger.info("Starting sequence run...")
+                self.sequence.run()
+                self.logger.info("Sequence run completed.")
+            except Exception as e:
+                self.logger.error(f"Runner ran into error while executing sequence in the loop -> {e}")
+        except Exception as e:
+            if app_state.controller:
+                error_text = f"Runner execution failed to run. Not sequence error. Probably failed to initialize. -> {str(e)}"
+                app_state.controller.update_result(text=error_text)
+            raise RunnerException("Runner execution failed to run. Not sequence error. Probably failed to initialize.", e)
+        finally:
+            self.logger.info("Sequence run completed. Sleeping for configured seconds...")
 
 
 if __name__ == "__main__":

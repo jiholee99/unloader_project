@@ -44,6 +44,16 @@ class ViewerView(QWidget):
         self.result_box.setStyleSheet("font-size: 12px; padding: 10px;")
         self.main_layout.addWidget(self.result_box)
 
+    def closeEvent(self, event):
+        from core import app_state
+        controller = app_state.controller
+
+        if controller and controller.runner_thread:
+            controller.runner_thread.request_stop()
+            controller.runner_thread.wait()  # block until thread exits
+
+        event.accept()
+        
     def _create_panel(self, index):
         title = QLabel(self.model.panel_titles[index])
         title.setAlignment(Qt.AlignCenter)

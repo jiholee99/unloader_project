@@ -19,10 +19,16 @@ class ViewerController(QObject):
         self.model = model
         self.view = view
 
+        self.runner_thread = None
+
+
         # connect controller signals to view slots
         self.sig_update_title.connect(view.update_title)
         self.sig_update_image.connect(view.update_image)
         self.sig_update_result.connect(view.update_result)
+    
+    def set_runner_thread(self, thread):
+        self.runner_thread = thread
 
     # ================================================================
     # PUBLIC API CALLS (used by your app)
