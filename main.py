@@ -22,10 +22,18 @@ class RunnerThread(QThread):
         self.stop_requested = True
 
     def run(self):
-        config = AppConfigAdapter().load_loop_delay()
         while not self.stop_requested:
+            config = AppConfigAdapter().load_loop_delay()
             self.runner.run_once()   # <-- modify Runner below
-            self.msleep(int(config * 1000))  # sleep expects milliseconds
+            
+            delay_ms = int(config * 1000)
+            elapsed = 0
+
+            # sleep in small 10ms chunks
+            while elapsed < delay_ms and not self.stop_requested:
+                self.msleep(10)
+                elapsed += 10
+
 
 
 

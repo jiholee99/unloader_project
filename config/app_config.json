@@ -1,7 +1,7 @@
 {
     "appname": "Unloader Project",
     "version": "1.0.0",
-    "loop_delay_seconds": 10,
+    "loop_delay_seconds": 1000,
     "roi": {
         "x": 1031,
         "y": 1278,
@@ -15,7 +15,7 @@
     },
     "roller_close_task_options": {
         "use_roi_fallback": true,
-        "min_threshold": 60,
+        "min_threshold": 75,
         "max_threshold": 255,
         "crop_roi": {
             "x": 1031,
@@ -25,7 +25,7 @@
         },
         "use_remove_bright_line": true,
         "use_fill_holes": true,
-        "min_contour_area": 80000,
+        "min_contour_area": 20000,
         "shape_detection_options": {
             "area": {
                 "weight": 0.3,

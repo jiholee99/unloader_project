@@ -39,10 +39,8 @@ class InspectionService:
                 app_state.controller.update_panel(0, title="cropped", image=result.get("cropped_image", None))
                 app_state.controller.update_panel(1, title="preprocessed", image=result.get("preprocessed_image", None))
                 app_state.controller.update_panel(2, title="processed", image=result.get("postprocessed_image", None))
-                contours = []
-                for contour in result.get("contours", []):
-                    contours.append(contour.get_contour())
-                app_state.controller.update_panel(3, title="overlay", image=overlay_filled_contours(image=orginal_image,contours=contours,random_colors=True, roi=result["roi"]))
+                contours = result.get("contours", [])
+                app_state.controller.update_panel(3, title="overlay", image=overlay_filled_contours(image=orginal_image,contour_objs=contours, roi=result["roi"]))
                 contours_info_str = PrettyPrint.printContourInfos(result.get("contours", []))
                 import datetime
                 current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
