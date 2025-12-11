@@ -118,3 +118,8 @@ class AppConfigHandler:
     def get_remote_camera_options() -> dict:
         config_data = AppConfigHandler._load_config()
         return config_data.get("remote_camera_options")
+    
+    @staticmethod
+    def get_image_uploader_options() -> dict:
+        config_data = AppConfigHandler._load_config()
+        return config_data.get("image_uploader_options")

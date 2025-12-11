@@ -3,7 +3,7 @@ from app.factories import InspectionFactory
 # Adapters
 from adapters.config import AppConfigAdapter
 from adapters.image_process import ImagePreprocessor
-from adapters.remote_capture import DirectConnector
+from adapters.remote_capture import DirectConnector, UrlRequestor
 from adapters.image_uploader import MiniPCUploader
 # Core Services
 from core.image_grab import ImageGrabService
@@ -53,18 +53,21 @@ class TestSequence:
             app_state.controller.update_result(text="Inspection result image saved successfully.")
 
     def _remote_capture(self):
-        return
+        # return
         app_state.controller.update_result(text="Simulating remote image capture...") if app_state.controller else None
-        config = AppConfigAdapter().load_remote_camera_options()
-        dirct_connector = DirectConnector(config=config)
-        remote_capture_service = RemoteCaptureService(remote_capture_repository=dirct_connector)
-        remote_capture_service.remote_capture()
-        app_state.controller.update_result(text="Remote image capture simulation completed.") if app_state.controller else None
+        try:
+            config = AppConfigAdapter().load_remote_camera_options()
+            url_requestor = UrlRequestor(config=config)
+            remote_capture_service = RemoteCaptureService(remote_capture_repository=url_requestor)
+            remote_capture_service.remote_capture()
+        except Exception as e:
+            app_state.controller.update_result(text="Remote capture failed.") if app_state.controller else None
+            raise SequenceException("Remote capture failed during sequence execution.", e)
+        finally:
+            app_state.controller.update_result(text="Remote image capture simulation completed.") if app_state.controller else None
+        
         return
-        # Pseudo code for grabbing images from remote devices
-        # remote_capture_service = RemoteCaptureService("repo")
-        # remote_capture_service.capture_all()
-
+        
     def _attach_bobbin_info(self):
         app_state.controller.update_result(text="Simulating bobbin info attachment...") if app_state.controller else None
         time.sleep(1)  # Simulate delay
@@ -74,15 +77,17 @@ class TestSequence:
 
     def _upload_results(self):
         app_state.controller.update_result(text="Simulating result upload...") if app_state.controller else None
-        minpc_uploader = MiniPCUploader()
-        uploader_service = ImageUploaderService(uploader_repository=minpc_uploader)
-        uploader_service.upload(dest_path="/Samples", file_path="/home/lgvision/projects/new/unloader_project/assets/saved_images/inspection_result.jpeg")
+        try:
+            config = AppConfigAdapter().load_image_uploader_options()
+            minpc_uploader = MiniPCUploader(config=config)
+            uploader_service = ImageUploaderService(uploader_repository=minpc_uploader, config=config)
+            uploader_service.upload(dest_path="/Samples")
+        except Exception as e:
+            app_state.controller.update_result(text="Result upload failed.") if app_state.controller else None
+            raise SequenceException("Result upload failed during sequence execution.", e)
         app_state.controller.update_result(text="Result upload simulation completed.") if app_state.controller else None
         return
-        # Pseudo code for uploading results
-        # uploader = ImageUploaderService("repo")
-        # uploader.upload("file_path")
-        # raise NotImplementedError("Result upload not implemented yet.")
+
 
     def run(self):
         try:
@@ -90,22 +95,28 @@ class TestSequence:
             grabbed_image = self._grab_image()
 
             # Inspection Service Setup
+            self.logger.info("Starting inspection simulation...")
             self._run_inspection(grabbed_image)
             if app_state.controller:
                 app_state.controller.update_panel(0, title="Test Sequence", image=grabbed_image)
                 app_state.controller.update_result(text="Inspection completed successfully.")
                 pass
+            self.logger.info("Inspection simulation completed.")
 
             self._save_image(grabbed_image)
 
             # Send signal to two other pi to grab images
+            self.logger.info("Starting remote capture simulation...")
             self._remote_capture()
+            self.logger.info("Remote capture simulation completed.")
              
             # Retrieve bobbin info from database and attach to result
             self._attach_bobbin_info()
 
             # Upload results to database
+            self.logger.info("Starting result upload simulation...")
             self._upload_results()
+            self.logger.info("Result upload simulation completed.")
 
         except Exception as e:
             if app_state.controller:

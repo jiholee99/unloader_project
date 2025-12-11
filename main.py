@@ -29,6 +29,7 @@ def parse_args():
     parser.add_argument("-file", action="store_true", help="Use file grabber")
 
     parser.add_argument("-testseq", action="store_true", help="Run test sequence")
+    parser.add_argument("-imgcptseq", action="store_true", help="Run image capture sequence")
 
     return parser.parse_args()
 

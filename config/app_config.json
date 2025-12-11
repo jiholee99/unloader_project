@@ -1,30 +1,17 @@
 {
     "appname": "Unloader Project",
     "version": "1.0.0",
-    "loop_delay_seconds": 0.1,
+    "loop_delay_seconds": 30,
     "roi": {
         "x": 1031,
         "y": 1278,
         "w": 2327,
         "h": 3190
     },
-    "judgement_options": {
-        "fullness_cutoff": 0.5
-    },
     "log_options": {
         "log_to_file": true,
         "log_level": "DEBUG",
         "log_file_path": "logs/app.log"
-    },
-    "preprocess_options": {
-        "threshold": 55,
-        "max_threshold": 255,
-        "use_remove_bright_line": true,
-        "use_hsv_filter": false
-    },
-    "postprocess_options": {
-        "min_contour_area": 500,
-        "use_fill_holes": true
     },
     "roller_close_task_options": {
         "use_roi_fallback": true,
@@ -57,13 +44,13 @@
         }
     },
     "remote_camera_options": {
-        "server_url": "http://192.168.1.42:5000/signal",
-        "photo_dir": "/home/lgvision/projects/new/unloader_project/assets/saved_images/",
-        "slave1_dir": "/home/lgvision/projects/new/unloader_project/assets/saved_images/slaves1/",
-        "slave2_dir": "/home/lgvision/projects/new/unloader_project/assets/saved_images/slaves2/",
-        "slaves": {
-            "slave1": true,
-            "slave2": true
-        }
+        "save_path": "C:\\Users\\jiho lee\\Desktop\\Programming\\python\\unloader_project\\assets\\saved_images\\",
+        "slave1_url" : "https://picsum.photos/200/300",
+        "slave2_url" : "https://picsum.photos/200/300"
+    },
+    "image_uploader_options": {
+        "minipc_ip": "100.72.68.126",
+        "minipc_port": 5000,
+        "path": ".\\assets\\saved_images"
     }
 }

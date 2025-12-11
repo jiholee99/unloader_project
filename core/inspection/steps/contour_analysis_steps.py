@@ -2,6 +2,7 @@ from exceptions.exception import InspectionStepException
 from adapters.image_analysis.contour_validator import ContourValidator
 from core.interfaces import InspectionStep
 from model.contour import Contour
+import numpy as np
 
 class IsContourRectangular(InspectionStep):
     def execute(self, contour, angle_tolerance=10) -> bool:
@@ -30,6 +31,18 @@ def isContourRollerShape(contour : Contour, shape_detection_options:dict) -> flo
     area_normalized = min(area / area_max, 1.0)
     if area >= area_cutoff:
         score += area_weight * area_normalized
+
+    # Check Aspect Ratio
+
+    # Check circularity
+    circularity = 4 * np.pi * area / (contour.perimeter * contour.perimeter + 1e-6)
+    print(f"Circularity: {circularity}")
+    # circ_weight = shape_detection_options["circularity"]["weight"]
+    # circ_cutoff = shape_detection_options["circularity"]["cutoff"]
+
+    # if circularity >= circ_cutoff:
+    #     score += circ_weight * circularity
+
     
     # Check Solidity
     solidity = contour.solidity
