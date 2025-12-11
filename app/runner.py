@@ -14,6 +14,11 @@ class Runner:
         self.sequence = None
         self.logger = get_logger("Runner")
         self.args = args
+        self.inspection_service = None
+        self.grabber_service = None
+        self.sequence = None
+
+        self._initialize()
     
     def _select_grabber(self):
         if self.args.picamera:
@@ -26,7 +31,16 @@ class Runner:
         if self.args.testseq:
             return TestSequence(inspection_service=inspection_service, grabber_service=grabber_service)
         return Sequence(inspection_service=inspection_service, grabber_service=grabber_service)
-        
+
+    def _initialize(self):
+        if app_state.controller:
+                app_state.controller.update_result(text="Runner started. Initializing services...")
+        self.inspection_service = InspectionFactory.create()
+        self.grabber_service = self._select_grabber()
+        self.sequence = self._select_sequence(inspection_service=self.inspection_service, grabber_service=self.grabber_service)
+        if app_state.controller:
+                app_state.controller.update_result(text="Services initialized. Starting main loop...")  
+                      
     def run(self):
         try:
             # Initialize services
@@ -56,17 +70,10 @@ class Runner:
         
     def run_once(self):
         try:
-            # Initialize services
-            if app_state.controller:
-                app_state.controller.update_result(text="Runner started. Initializing services...")
-            inspection_service = InspectionFactory.create()
-            grabber_service = self._select_grabber()
-            self.sequence = self._select_sequence(inspection_service=inspection_service, grabber_service=grabber_service)
-            if app_state.controller:
-                app_state.controller.update_result(text="Services initialized. Starting main loop...")
-            # Repeatedly runs the sequence every configured seconds
             try: 
                 self.logger.info("Starting sequence run...")
+                if self.sequence is None:
+                    raise RunnerException("Runner sequence is not initialized.")
                 self.sequence.run()
                 self.logger.info("Sequence run completed.")
             except Exception as e:

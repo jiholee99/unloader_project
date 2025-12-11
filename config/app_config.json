@@ -1,7 +1,7 @@
 {
     "appname": "Unloader Project",
     "version": "1.0.0",
-    "loop_delay_seconds": 6,
+    "loop_delay_seconds": 16000,
     "roi": {
         "x": 1383,
         "y": 2089,
@@ -48,13 +48,13 @@
         }
     },
     "remote_camera_options": {
-        "save_path": "C:\\Users\\jiho lee\\Desktop\\Programming\\python\\unloader_project\\assets\\saved_images\\",
-        "slave1_url": "https://picsum.photos/200/300",
-        "slave2_url": "https://picsum.photos/200/300"
+        "save_path": "./assets/saved_images/",
+        "slave1_url": "http://100.75.186.59:5001/latest_photo",
+        "slave2_url": "http://100.103.210.106:5001/latest_photo"
     },
     "image_uploader_options": {
         "minipc_ip": "100.72.68.126",
         "minipc_port": 5000,
-        "path": ".\\assets\\saved_images"
+        "path": "./assets/saved_images"
     }
 }

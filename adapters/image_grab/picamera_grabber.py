@@ -37,17 +37,28 @@ class PiCameraGrabber(Grabber):
         except Exception as e:
             raise ImageGrabException(f"Failed to initialize PiCamera: {e}")
 
-    def grab_image(self) -> np.ndarray:
-        """Grab a frame without restarting the camera."""
+    def grab_image(self, timeout=1.0):
         if self.camera is None:
             raise ImageGrabException("PiCamera not initialized. Call init_grabber() first.")
+        print("Grabbing Image")
+        import time
+        start = time.time()
 
-        try:
-            frame = self.camera.capture_array()
-            return frame
+        while True:
+            req = self.camera.capture_request(wait=False)
 
-        except Exception as e:
-            raise ImageGrabException(f"Failed to grab image from PiCamera: {e}")
+            if req is not None:
+                # Extract image properly
+                frame = req.get_result(timeout=5).make_array("main")
+                print("Grab done")
+                return frame
+
+            if time.time() - start > timeout:
+                raise ImageGrabException("Camera capture timed out – sensor stalled.")
+        
+            time.sleep(0.01)
+
+
 
     def close(self):
         """Release the camera gracefully."""

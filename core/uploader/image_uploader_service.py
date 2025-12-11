@@ -20,8 +20,23 @@ class ImageUploaderService:
         try:
             # Get 3 saved images paths
             image_folder_path = self.config.get("path", "./assets/saved_images/")
+            filename_list = []
             for file_path in self._list_files_in_directory(image_folder_path):
+                # Extract filename for later
+                fname = file_path.split("/")[-1]
+                filename_list.append(f"{dest_path}/{fname}")
+                # Upload each file
                 self.uploader_repository.upload_single_file(dest_path=dest_path, file_path=file_path)
+            # Change / to \ for Windows compatibility if needed
+            filename_list = [fpath.replace("/", "\\") for fpath in filename_list]
+            self.uploader_repository.send_complete_status(file_paths=[f"{fpath}" for fpath in filename_list])
             return True
         except Exception as e:
             raise ImageUploadException("Image upload failed in ImageUploaderService.", e)
+        
+    def send_complete_status(self, dest_path : str, file_names: list) -> bool:
+        try:
+            file_paths = [f"{dest_path}/{file_name}" for file_name in file_names]
+            return self.uploader_repository.send_complete_status(file_paths=file_paths)
+        except Exception as e:
+            raise ImageUploadException("Failed to send complete status in ImageUploaderService.", e)

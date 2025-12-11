@@ -32,7 +32,7 @@ class TestSequence:
     def _grab_image(self) -> np.ndarray:
         self.logger.info("Grabbing image...")
         image = self.grabber_service.grab_image()
-        # self._save_image(image=image)
+        self._save_image(image=image)
         self.logger.info("Grabbed image successfully.")
         return image
     
@@ -81,7 +81,7 @@ class TestSequence:
             config = AppConfigAdapter().load_image_uploader_options()
             minpc_uploader = MiniPCUploader(config=config)
             uploader_service = ImageUploaderService(uploader_repository=minpc_uploader, config=config)
-            uploader_service.upload(dest_path="/Samples")
+            uploader_service.upload(dest_path="/Unloader2")
         except Exception as e:
             app_state.controller.update_result(text="Result upload failed.") if app_state.controller else None
             raise SequenceException("Result upload failed during sequence execution.", e)

@@ -14,13 +14,26 @@ class MiniPCUploader(Uploader):
         except Exception as e:
             raise ImageUploadException("Failed to initialize MiniPCUploader with given config.", e)
         
+    def send_complete_status(self, file_paths):
+        try:
+            json_payload = {
+                "status": "complete",
+                "file_paths": file_paths
+            }
+            url = f"http://{self.minipc_ip}:{self.minipc_port}/send_photo"
+            response = requests.post(url, json=json_payload)
+            if response.status_code != 200:
+                raise ImageUploadException(f"Failed to send complete status, server responded with status code {response.status_code}")
+        except Exception as e:
+            raise ImageUploadException("Failed to send complete status to MiniPC.", e)
+        return True
+        
     def upload_single_file(self, dest_path, file_path):
         url = f"http://{self.minipc_ip}:{self.minipc_port}/upload/{dest_path}"
         max_retries = 3
         retry_delay = 2  # seconds
         # Track success
         upload_success = False
-        raise ImageUploadException("For testing purposes.") 
         for attempt in range(1, max_retries + 1):
             try:
                 self.logger.info(f"[Attempt {attempt}/{max_retries}] Uploading {file_path} → {dest_path}")
@@ -53,6 +66,7 @@ class MiniPCUploader(Uploader):
                 f"Upload failed after {max_retries} attempts for file: {file_path}"
             )
             return False
+            
 
         return True
 

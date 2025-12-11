@@ -21,30 +21,47 @@ class UrlRequestor:
         self.slave2_url = config.get("slave2_url", None)
         self.logger = get_logger()
     
-    def _retrieve_photos(self, url) -> bytes :
+    def _retrieve_photos(self, url) -> bytes:
         try:
-            response = requests.get(url)
+            print(url)
+            # Timeout applies to: (connect timeout, read timeout)
+            response = requests.get(url, timeout=(3, 5))  
+            print(response)
 
             if response.status_code != 200:
-                raise RemoteCaptureException(f"Failed to retrieve photos from {url} | Status code: {response.status_code}")
-                
+                raise RemoteCaptureException(
+                    f"Failed to retrieve photos from {url} | Status code: {response.status_code}"
+                )
+
             self.logger.debug(f"Photos retrieved successfully from {url}")
             return response.content
-        except Exception as e:
-            raise RemoteCaptureException(f"Error retrieving photos from {url}", e)
 
-    def _save_photos(self, file, filename):
-        """Save photos to local directory - Not implemented yet."""
+        except requests.Timeout:
+            raise RemoteCaptureException(f"Timeout while retrieving photos from {url}")
+
+        except requests.ConnectionError:
+            raise RemoteCaptureException(f"Connection error while retrieving photos from {url}")
+
+        except Exception as e:
+            raise RemoteCaptureException(f"Error retrieving photos from {url}: {e}")
+
+    def _save_photos(self, file: bytes, filename: str):
+        """Save binary photo data to the local directory."""
         import os
         try:
-            if not os.path.exists(self.save_path):
-                os.makedirs(self.save_path)
+            os.makedirs(self.save_path, exist_ok=True)
+
             filepath = os.path.join(self.save_path, filename)
-            with open(filepath, 'wb') as f:
+            print(f"file : {filepath}")
+            with open(filepath, "wb") as f:
                 f.write(file)
+
             self.logger.debug(f"Photo saved successfully at {filepath}")
+            return filepath
+
         except Exception as e:
             raise RemoteCaptureException("Error saving photo", e)
+
     
     def request_photos_from_slaves(self) -> bool:
         """Request photos from slaves with retries that do not break the loop."""
@@ -83,12 +100,17 @@ class UrlRequestor:
                 self.logger.error(f"Slave 2 failed on attempt {attempt+1}: {e}")
 
             # If both are done, stop early
-            if slave1_success and slave2_success:
+            if slave1_success:
                 self._save_photos(slave_1_file, "slave1_photo.jpeg")
+                
+            
+            if slave2_success:
                 self._save_photos(slave_2_file, "slave2_photo.jpeg")
-                return True
-
+                
+            
+        
             time.sleep(retry_delay)
+            
 
         # After retries, check results
         if not slave1_success or not slave2_success:
