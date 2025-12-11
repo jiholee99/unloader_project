@@ -4,6 +4,7 @@ class PrettyPrint:
     @staticmethod
     def printContourInfos(contours : list[Contour]):
         result = ""
-        for contour in contours:
-            result += repr(contour) + "\n"
+        sorted_contours = sorted(contours, reverse=True)
+        for contour in sorted_contours:
+            result += repr(contour) + "\n\n"
         return result

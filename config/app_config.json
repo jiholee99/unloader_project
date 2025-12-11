@@ -1,12 +1,12 @@
 {
     "appname": "Unloader Project",
     "version": "1.0.0",
-    "loop_delay_seconds": 1000,
+    "loop_delay_seconds": 6,
     "roi": {
-        "x": 1031,
-        "y": 1278,
-        "w": 2327,
-        "h": 3190
+        "x": 1383,
+        "y": 2089,
+        "w": 1419,
+        "h": 1798
     },
     "log_options": {
         "log_to_file": true,
@@ -15,17 +15,17 @@
     },
     "roller_close_task_options": {
         "use_roi_fallback": true,
-        "min_threshold": 75,
-        "max_threshold": 255,
+        "min_threshold": 90,
+        "max_threshold": 135,
         "crop_roi": {
-            "x": 1031,
-            "y": 1278,
-            "w": 2327,
-            "h": 3190
+            "x": 1383,
+            "y": 2089,
+            "w": 1419,
+            "h": 1798
         },
         "use_remove_bright_line": true,
         "use_fill_holes": true,
-        "min_contour_area": 20000,
+        "min_contour_area": 50000,
         "shape_detection_options": {
             "area": {
                 "weight": 0.3,
@@ -40,13 +40,17 @@
                 "weight": 0.9,
                 "cutoff": 0.6
             },
+            "circularity": {
+                "weight": 0.5,
+                "cutoff": 0.5
+            },
             "score_cutoff": 0.6
         }
     },
     "remote_camera_options": {
         "save_path": "C:\\Users\\jiho lee\\Desktop\\Programming\\python\\unloader_project\\assets\\saved_images\\",
-        "slave1_url" : "https://picsum.photos/200/300",
-        "slave2_url" : "https://picsum.photos/200/300"
+        "slave1_url": "https://picsum.photos/200/300",
+        "slave2_url": "https://picsum.photos/200/300"
     },
     "image_uploader_options": {
         "minipc_ip": "100.72.68.126",

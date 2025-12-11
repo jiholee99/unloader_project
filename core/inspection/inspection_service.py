@@ -42,9 +42,7 @@ class InspectionService:
                 contours = result.get("contours", [])
                 app_state.controller.update_panel(3, title="overlay", image=overlay_filled_contours(image=orginal_image,contour_objs=contours, roi=result["roi"]))
                 contours_info_str = PrettyPrint.printContourInfos(result.get("contours", []))
-                import datetime
-                current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                text = f"Inspection Time: {current_time}\n{contours_info_str}"
+                text = f"{contours_info_str}"
                 app_state.controller.update_result(text=text)
 
 

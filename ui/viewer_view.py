@@ -26,7 +26,6 @@ class ViewerView(QWidget):
         # ---- 2x2 grid for four panels ----
         self.grid = QGridLayout()
         self.main_layout.addLayout(self.grid)
-        self.main_layout.setStretchFactor(self.grid, 3)
 
         self.title_labels = []
         self.image_labels = []
@@ -41,8 +40,13 @@ class ViewerView(QWidget):
         self.result_box = QTextEdit()
         self.result_box.setReadOnly(True)
         self.result_box.setMinimumHeight(150)
+        self.result_box.setMinimumWidth(200)
         self.result_box.setStyleSheet("font-size: 12px; padding: 10px;")
         self.main_layout.addWidget(self.result_box)
+
+        # Set ratio: image grid : result box
+        self.main_layout.setStretch(0, 3)   # image panel section weight
+        self.main_layout.setStretch(1, 2)   # result section weight
 
     def closeEvent(self, event):
         from core import app_state

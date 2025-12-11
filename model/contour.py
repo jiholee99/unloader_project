@@ -42,6 +42,7 @@ class Contour:
         self.extent = extent
         self.solidity = solidity
         self.score = 0.0
+        self.circularity = (4 * 3.1416 * area) / (perimeter * perimeter) if perimeter != 0 else 0.0
 
     def set_contour(self, contour):
         self.contour = contour
@@ -49,7 +50,17 @@ class Contour:
     def get_contour(self):
         return self.contour
 
+    def __lt__(self, other):
+        return self.score < other.score
+
+
     def __repr__(self):
+        return (
+            f"Contour(id={self.uid}, color={self.color}, area={self.area}, "
+            f"perimeter={self.perimeter}, bounding_box={self.bounding_box}, "
+            f"aspect_ratio={self.aspect_ratio:.2f}, extent={self.extent:.2f}, "
+            f"solidity={self.solidity:.2f}, circularity={self.circularity:.2f}, score={self.score:.2f})"
+        )
         return (f"Contour(id={self.uid} color={self.color} area={self.area}, perimeter={self.perimeter}, "
                 f"bounding_box={self.bounding_box}, aspect_ratio={self.aspect_ratio:.2f}, "
                 f"extent={self.extent:.2f}, solidity={self.solidity:.2f}) Score={self.score:.2f}")

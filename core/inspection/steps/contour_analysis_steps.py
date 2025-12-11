@@ -35,13 +35,12 @@ def isContourRollerShape(contour : Contour, shape_detection_options:dict) -> flo
     # Check Aspect Ratio
 
     # Check circularity
-    circularity = 4 * np.pi * area / (contour.perimeter * contour.perimeter + 1e-6)
-    print(f"Circularity: {circularity}")
-    # circ_weight = shape_detection_options["circularity"]["weight"]
-    # circ_cutoff = shape_detection_options["circularity"]["cutoff"]
+    circularity = contour.circularity
+    circ_weight = shape_detection_options["circularity"]["weight"]
+    circ_cutoff = shape_detection_options["circularity"]["cutoff"]
 
-    # if circularity >= circ_cutoff:
-    #     score += circ_weight * circularity
+    if circularity <= circ_cutoff:
+        score += circ_weight * circularity
 
     
     # Check Solidity
