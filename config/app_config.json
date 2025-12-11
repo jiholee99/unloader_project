@@ -1,7 +1,7 @@
 {
     "appname": "Unloader Project",
     "version": "1.0.0",
-    "loop_delay_seconds": 16000,
+    "loop_delay_seconds": 6,
     "roi": {
         "x": 1383,
         "y": 2089,

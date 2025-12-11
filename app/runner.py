@@ -1,6 +1,7 @@
 import time
 from app.sequence import Sequence
 from test.test_sequence import TestSequence
+from test.camera_sequence import CameraSequence
 from adapters.config import AppConfigAdapter
 from utils.logger import get_logger
 from app.factories import InspectionFactory, CameraGrabberFactory, FileGrabberFactory, PiCameraGrabberFactory
@@ -30,6 +31,8 @@ class Runner:
     def _select_sequence(self, inspection_service, grabber_service):
         if self.args.testseq:
             return TestSequence(inspection_service=inspection_service, grabber_service=grabber_service)
+        elif self.args .imgcptseq:
+            return CameraSequence(inspection_service=inspection_service, grabber_service=grabber_service)
         return Sequence(inspection_service=inspection_service, grabber_service=grabber_service)
 
     def _initialize(self):
